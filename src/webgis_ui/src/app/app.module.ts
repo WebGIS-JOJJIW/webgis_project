@@ -7,6 +7,7 @@ import { SideBarComponent } from './menu/side-bar/side-bar.component';
 import { TopBarComponent } from './menu/top-bar/top-bar.component';
 import { EditorMapComponent } from './page/editor-map/editor-map.component';
 import { LiveMonitorComponent } from './page/live-monitor/live-monitor.component';
+import { LayoutComponent } from './menu/layout/layout.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { LiveMonitorComponent } from './page/live-monitor/live-monitor.component
     SideBarComponent,
     TopBarComponent,
     EditorMapComponent,
-    LiveMonitorComponent
+    LiveMonitorComponent,
+    LayoutComponent
   ],
   imports: [
     BrowserModule,

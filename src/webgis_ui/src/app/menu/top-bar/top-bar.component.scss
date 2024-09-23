@@ -1,0 +1,122 @@
+// Define breakpoints for responsiveness
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+.end-font {
+  font-size: 25px;
+}
+
+.navbar-expand-lg .navbar-collaps-2 {
+  display: flex !important;
+  flex-basis: auto;
+  justify-content: flex-start;
+
+  // For small screens, make the navbar collapse into a column layout
+  @media (max-width: $breakpoint-md) {
+    justify-content: center;
+    flex-direction: column;
+  }
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+  color: white;
+}
+
+.nav-link {
+  cursor: pointer !important;
+  text-transform: uppercase;
+
+  // Responsive font size
+  font-size: 16px;
+
+  @media (max-width: $breakpoint-md) {
+    font-size: 14px;
+  }
+}
+
+.nav-link:hover {
+  background-color: #555;
+  color: #fff;
+}
+
+.nav-item.active .nav-link {
+  background-color: #58564a;
+  color: #fff;
+}
+
+.icon-side {
+  width: 25px;
+  height: 25px;
+}
+
+.icon-top {
+  width: 30px;
+  height: 30px;
+}
+
+.icon-top-1 {
+  width: 30px;
+  height: 35px;
+  position: relative;
+}
+
+.icon-side-2 {
+  width: 20px;
+  height: 20px;
+}
+
+.dropdown-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  color: #a7f1e1;
+
+  // Adjust the font size for smaller screens
+  @media (max-width: $breakpoint-md) {
+    font-size: 16px;
+  }
+}
+
+.dropdown-menu {
+  position: absolute;
+  background-color: #2e3b4e;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.space-line {
+  padding-inline: 20px !important;
+
+  @media (max-width: $breakpoint-md) {
+    padding-inline: 10px !important;
+  }
+}
+.space-line2 {
+  padding-inline: 7px !important;
+
+  @media (max-width: $breakpoint-md) {
+    padding-inline: 5px !important;
+  }
+}
+
+// Navbar for mobile screens
+@media (max-width: $breakpoint-md) {
+  .navbar {
+    padding: 10px;
+
+    .navbar-nav {
+      flex-direction: column;
+      align-items: center;
+
+      .nav-item {
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

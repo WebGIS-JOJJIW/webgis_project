@@ -1,1 +1,79 @@
-<p>top-bar works!</p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="padding: 15px">
+    <a class="navbar-brand">
+      <img class="icon-top-1" src="assets/img/army.png" alt="Map Editor" />
+      ARMYSENSE
+    </a>
+    <div class="dropdown-container space-line" (click)="toggleDropdown()">
+        [<span class="dropdown-text">กองกำลังบูรพา</span>
+        <i [class]="isDropdownOpen ? 'fa fa-chevron-up' : 'fa fa-chevron-down'"></i
+        >]
+      </div>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <!-- <div *ngIf="isDropdownOpen" class="dropdown-menu">
+      <ul>
+        <li><a href="#">Option 1</a></li>
+        <li><a href="#">Option 2</a></li>
+        <li><a href="#">Option 3</a></li>
+      </ul>
+    </div>
+   -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item" routerLinkActive="active" [routerLink]="['/live-monitor']" (click)="setCloseAll('')">
+          <a class="nav-link space-line">
+            <img class="icon-side" src="assets/icons/sensor.png" alt="Sensor" />
+            &nbsp; Live Monitoring
+          </a>
+        </li>
+        <li class="nav-item" routerLinkActive="active" [routerLink]="['/drone-patrol']" (click)="setCloseAll('')">
+          <a class="nav-link space-line">
+            <img class="icon-side-2" src="assets/icons/drone.png" alt="Drone" />
+            &nbsp; Drone Patrol
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link space-line">
+            <img class="icon-side" style="margin-top: -5px" src="assets/icons/laptop-analytic.png" alt="Summary" />
+            &nbsp; Summary
+          </a>
+        </li>
+      </ul>
+    </div>
+  
+    <div class="collapse navbar-collaps-2">
+      <ul class="navbar-nav">
+        <li class="nav-item" routerLinkActive="active" [routerLink]="['/editor-map']" (click)="setCloseAll('')">
+          <a class="nav-link space-line2">
+            <img class="icon-top" src="assets/menuIcons/map-editing.png" alt="Map Editor" />
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link space-line2">
+            <img class="icon-top" src="assets/menuIcons/setting.png" alt="Setting" />
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link space-line2">
+            <img class="icon-top" src="assets/menuIcons/user.png" alt="User" />
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link">
+            <img class="icon-top" src="assets/menuIcons/logout.png" alt="Logout" />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
