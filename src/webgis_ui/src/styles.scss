@@ -1,7 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
 html,
-body,
-.content {
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -9,13 +7,46 @@ body,
   background-color: #0B2026 !important;
 }
 
-.col-0_5 {
-  flex: 0 0 3.51%; // 0.5/12 * 100 = 4.166667%
-  max-width: 3.51% !important; 
+.container-fluid {
+  height: 100vh;
+}
+
+.row {
+  margin: 0;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  flex: 0 0 64px;
+  max-width: 64px;
+  background-color: #1E2F36; // Optional: Add a background color for clarity
+  height: 100vh;
+}
+
+/* Main Content */
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-left: 0;
+  
+  #top-row {
+    flex-grow: 1;
+    height: 60%;
+  }
+
+  #bottom-row {
+    flex-grow: 1;
+    height: 40%;
+  }
 }
 
 
-.col-11_5 {
-  flex: 0 0 96.49%; // 0.5/12 * 100 = 4.166667%
-  max-width: 96.49% !important; 
+.row > * {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  margin-top: var(--bs-gutter-y);
+  padding-right: 0 !important; // Override padding
+  padding-left: 0 !important;  // Override padding
 }

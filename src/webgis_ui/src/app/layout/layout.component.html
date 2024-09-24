@@ -5,17 +5,21 @@
 <!-- This is where child routes will be loaded -->
 <!-- </div> -->
 
-<div class="">
+<div class="container-fluid">
   <div class="row align-items-start">
     <app-top-bar></app-top-bar>
   </div>
   <div class="row">
-    <div class="col-0_5">
+    <!-- Sidebar -->
+    <div class="sidebar col-auto">
       <app-side-bar></app-side-bar>
     </div>
-    <div class="col-11_5">
-      <div class="row" ><router-outlet></router-outlet></div>
-      <div class="row pot-bt-l">
+    <!-- Main Content -->
+    <div class="content col">
+      <div id="top-row">
+        <router-outlet></router-outlet>
+      </div>
+      <div class="" id="bottom-row">
         <app-shared-table
           [data]="eventsData"
           [columns]="columnsConfig"

@@ -60,12 +60,12 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   setMapHeight(): void {
-    const navbarHeight = document.querySelector('.navbar')?.clientHeight || 0; // Get navbar height
-    const mapContainer = document.getElementById('map');
-    if (mapContainer) {
+    // const navbarHeight = document.querySelector('.navbar')?.clientHeight || 0; // Get navbar height
+    // const mapContainer = document.getElementById('map');
+    // if (mapContainer) {
       
-      mapContainer.style.height = `${window.innerHeight - navbarHeight}px`; // Set map height
-    }
+    //   mapContainer.style.height = `${window.innerHeight - navbarHeight}px`; // Set map height
+    // }
   }
 
   mapEvents(): void {
