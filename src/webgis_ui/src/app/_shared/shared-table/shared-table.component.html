@@ -1,0 +1,30 @@
+<div class="event-table-container">
+    <div class="filters" *ngIf="showFilters">
+      <div class="checkboxes">
+        <label><input type="checkbox" (change)="onSelectAll($event)"> {{ selectAllLabel }}</label>
+        <label><input type="checkbox" (change)="onSelectAlarm($event)"> {{ selectAlarmLabel }}</label>
+        <label><input type="checkbox" (change)="onSelectInfo($event)"> {{ selectInfoLabel }}</label>
+      </div>
+      <div class="search-bar">
+        <input type="text" placeholder="Search" [(ngModel)]="searchTerm" (input)="onSearchChange($event)">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="filter-icon">
+        <i class="fa fa-sliders"></i>
+      </div>
+    </div>
+  
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th *ngFor="let column of columns">{{ column.header }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of filteredData">
+          <td *ngFor="let column of columns">{{ row[column.field] }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

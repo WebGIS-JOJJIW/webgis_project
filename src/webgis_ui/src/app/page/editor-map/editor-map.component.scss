@@ -1,6 +1,3 @@
-/* editor-map.component.scss */
-#map {
-    width: 100%;
-    height: 100vh;  /* Full viewport height */
-  }
-  
+app-map {
+  height: 100vh; /* Ensure the map takes up full screen */
+}

@@ -57,14 +57,9 @@ $breakpoint-xl: 1200px;
 }
 
 .icon-top-1 {
-  width: 30px;
-  height: 35px;
+  width: 35px;
+  // height: 35px;
   position: relative;
-}
-
-.icon-side-2 {
-  width: 20px;
-  height: 20px;
 }
 
 .dropdown-container {
@@ -79,15 +74,6 @@ $breakpoint-xl: 1200px;
   @media (max-width: $breakpoint-md) {
     font-size: 16px;
   }
-}
-
-.dropdown-menu {
-  position: absolute;
-  background-color: #2e3b4e;
-  border-radius: 5px;
-  padding: 10px;
-  margin-top: 5px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .space-line {

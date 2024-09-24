@@ -1,8 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
-html, body, .content {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden; 
-  }
-  
+html,
+body,
+.content {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #0B2026 !important;
+}
+
+.col-0_5 {
+  flex: 0 0 3.51%; // 0.5/12 * 100 = 4.166667%
+  max-width: 3.51% !important; 
+}
+
+
+.col-11_5 {
+  flex: 0 0 96.49%; // 0.5/12 * 100 = 4.166667%
+  max-width: 96.49% !important; 
+}

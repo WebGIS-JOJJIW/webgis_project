@@ -1,0 +1,63 @@
+#sidebar {
+    width: 64px;
+  }
+  
+  .nav-link {
+    display: flex;
+    align-items: center;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    cursor: pointer !important;
+  }
+  
+  .nav-link i {
+    font-size: 1.5rem;
+    width: 30px;
+    /* Add a fixed width to align the text properly */
+    text-align: center;
+    /* Center align the icon within the width */
+  
+  }
+  
+  .bg-g {
+    background-color: #162528;
+  }
+
+  
+  .nav-link:hover {
+    background-color: #555;
+    /* Change to the desired highlight color */
+    color: #fff;
+    /* Change text color if needed */
+  }
+  
+  
+  .highlight-button {
+    background-color: #58564a; /* Example highlight color */
+    color: white; /* Text color */
+    border-radius: 5px; /* Optional: add some border radius */
+  }
+
+  .icon {
+    width: 30px;
+    height: 30px;
+  
+    @media (max-width: 1200px) {
+      // Adjust for smaller desktops or large tablets
+      width: 26px;
+      height: 26px;
+    }
+  
+    @media (max-width: 768px) {
+      // Adjust for tablets and small screens
+      width: 22px;
+      height: 22px;
+    }
+  
+    @media (max-width: 480px) {
+      // Adjust for mobile devices
+      width: 18px;
+      height: 18px;
+    }
+  }
+  

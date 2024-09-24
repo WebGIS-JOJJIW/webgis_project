@@ -1,0 +1,80 @@
+.event-table-container {
+    background-color: #2b333b;
+    padding: 15px;
+    // border-radius: 8px;
+  
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+  
+      .checkboxes {
+        label {
+          margin-right: 15px;
+          color: #fff;
+        }
+        input[type="checkbox"] {
+          margin-right: 5px;
+        }
+      }
+  
+      .search-bar {
+        position: relative;
+  
+        input {
+          background-color: #465260;
+          border: none;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 5px;
+        }
+  
+        .fa-search {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #fff;
+        }
+      }
+  
+      .filter-icon {
+        i {
+          color: white;
+          font-size: 20px;
+          cursor: pointer;
+        }
+      }
+    }
+  
+    table {
+      color: #fff;
+      width: 100%;
+  
+      thead {
+        th {
+          background-color: #38434d;
+          color: white;
+          padding: 10px;
+          text-align: left;
+        }
+      }
+  
+      tbody {
+        tr {
+          &:nth-child(odd) {
+            background-color: #333b44;
+          }
+          &:nth-child(even) {
+            background-color: #2b333b;
+          }
+  
+          td {
+            padding: 10px;
+          }
+        }
+      }
+    }
+  }
+  

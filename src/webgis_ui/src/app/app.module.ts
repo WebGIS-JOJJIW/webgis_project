@@ -8,6 +8,9 @@ import { TopBarComponent } from './navigation/top-bar/top-bar.component';
 import { EditorMapComponent } from './page/editor-map/editor-map.component';
 import { LiveMonitorComponent } from './page/live-monitor/live-monitor.component';
 import { LayoutComponent } from './layout/layout.component';
+import { MapComponent } from './_shared/map/map.component';
+import { SharedTableComponent } from './_shared/shared-table/shared-table.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 
 @NgModule({
   declarations: [
@@ -16,12 +19,16 @@ import { LayoutComponent } from './layout/layout.component';
     TopBarComponent,
     EditorMapComponent,
     LiveMonitorComponent,
-    LayoutComponent
+    LayoutComponent,
+    MapComponent,
+    SharedTableComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
-  ],
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
+],
   providers: [],
   bootstrap: [AppComponent]
 })
