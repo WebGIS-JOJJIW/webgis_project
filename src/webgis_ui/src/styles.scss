@@ -7,6 +7,10 @@ body {
   background-color: #0B2026 !important;
 }
 
+body, h1, h2, h3, h4, h5, h6, p, a, span, div, input {
+  font-family: 'Noto Sans Thai Looped', sans-serif !important;
+}
+
 .container-fluid {
   height: 100vh;
 }
@@ -41,7 +45,6 @@ body {
   }
 }
 
-
 .row > * {
   flex-shrink: 0;
   width: 100%;
@@ -50,3 +53,50 @@ body {
   padding-right: 0 !important; // Override padding
   padding-left: 0 !important;  // Override padding
 }
+
+/* The switch container */
+.mapboxgl-ctrl {
+  pointer-events: none; /* Disable pointer events for the control container */
+}
+
+.mapboxgl-ctrl-group {
+  pointer-events: auto; /* Re-enable pointer events for the switch */
+}
+
+.maplibregl-ctrl-bottom-left {
+  bottom: 10px;
+  left: 10px;
+}
+
+/* Style control container */
+.style-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Style for the satellite button */
+.style-button {
+  width: 50px;
+  height: 50px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.style-button:hover {
+  transform: scale(1.05);
+}
+
+.style-button.satellite {
+  // background-image: url("/satellite.jpeg");
+  background-size: cover;
+  background-position: center;
+}
+

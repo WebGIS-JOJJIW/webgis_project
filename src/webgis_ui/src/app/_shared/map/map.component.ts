@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
 import * as maplibregl from 'maplibre-gl';
+import { StyleControl } from '../../../models/stylecontrol';
 
 @Component({
   selector: 'app-map',
@@ -13,7 +14,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('in');
-    
+
     this.initializeMap();
     this.setMapHeight(); // Set initial map height
   }
@@ -25,12 +26,15 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   initializeMap(): void {
+    // Define available styles
+    
     const savedZoom = localStorage.getItem('mapZoom');
     const savedCenter = localStorage.getItem('mapCenter');
 
     this.map = new maplibregl.Map({
       container: 'map',
-      style: 'https://api.maptiler.com/maps/d9a4b917-d11b-4c66-8566-d42eb37737ec/style.json?key=89niYR6Aow3J66RlqxlA',
+      // style: 'https://api.maptiler.com/maps/d9a4b917-d11b-4c66-8566-d42eb37737ec/style.json?key=89niYR6Aow3J66RlqxlA',
+      style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=89niYR6Aow3J66RlqxlA',
       center: savedCenter ? JSON.parse(savedCenter) : this.defaultCenter,
       zoom: savedZoom ? parseFloat(savedZoom) : this.defaultZoom,
     });
@@ -41,7 +45,7 @@ export class MapComponent implements OnInit, OnDestroy {
       unit: 'metric',
     });
     this.map.addControl(scale, 'bottom-right');
-    
+
     // zoom contoller
     const nav = new maplibregl.NavigationControl();
     this.map.addControl(nav, 'bottom-right');
@@ -56,6 +60,8 @@ export class MapComponent implements OnInit, OnDestroy {
     });
     this.map.addControl(myLocationControl, 'bottom-right');
 
+    // Add the custom style control to the map
+    this.map.addControl(new StyleControl(), 'bottom-left');
     this.mapEvents();
   }
 
@@ -63,7 +69,7 @@ export class MapComponent implements OnInit, OnDestroy {
     // const navbarHeight = document.querySelector('.navbar')?.clientHeight || 0; // Get navbar height
     // const mapContainer = document.getElementById('map');
     // if (mapContainer) {
-      
+
     //   mapContainer.style.height = `${window.innerHeight - navbarHeight}px`; // Set map height
     // }
   }
@@ -85,3 +91,5 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 }
+
+
