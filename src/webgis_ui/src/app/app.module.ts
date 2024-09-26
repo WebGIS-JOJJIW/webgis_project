@@ -10,7 +10,8 @@ import { LiveMonitorComponent } from './page/live-monitor/live-monitor.component
 import { LayoutComponent } from './layout/layout.component';
 import { MapComponent } from './_shared/map/map.component';
 import { SharedTableComponent } from './_shared/shared-table/shared-table.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SensorInfoComponent } from './navigation/sensor-info/sensor-info.component'; 
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     LiveMonitorComponent,
     LayoutComponent,
     MapComponent,
-    SharedTableComponent
+    SharedTableComponent,
+    SensorInfoComponent
   ],
   imports: [
     BrowserModule,
