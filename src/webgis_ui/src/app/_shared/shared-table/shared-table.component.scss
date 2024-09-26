@@ -1,13 +1,13 @@
 .event-table-container {
-  background-color: #2b333b;
-  padding: 15px;
+  background-color: #1B3036;
+  padding: 10px;
   height: 100%;
 
   .filters {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
 
       .checkboxes {
           label {
@@ -49,7 +49,7 @@
   }
 
   .table-wrapper {
-      max-height: 26vh;  /* Adjust the height as needed */
+      max-height: 22vh;  /* Adjust the height as needed */
       overflow-y: auto;  /* Enable vertical scrolling */
       position: relative; /* Required for absolute positioning of the header */
   }
@@ -81,7 +81,7 @@
               }
 
               td {
-                  padding: 10px;
+                  padding: 5px;
               }
           }
       }

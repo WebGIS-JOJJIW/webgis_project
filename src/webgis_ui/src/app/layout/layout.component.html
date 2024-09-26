@@ -8,11 +8,12 @@
       <app-side-bar></app-side-bar>
     </div>
     <!-- Main Content -->
-    <div class="content col">
+    <div class="content col ">
       <div id="top-row">
         <router-outlet></router-outlet>
       </div>
       <div class="" id="bottom-row">
+        <div class="header">เหตุการณ์ล่าสุด</div>
         <app-shared-table
           [data]="eventsData"
           [columns]="columnsConfig"

@@ -1,6 +1,6 @@
 #map {
   width: 100%; // Ensure it takes full width
-  height: 100%; // Prevent default fixed height
-  // min-height: 94%; // Optional: a minimum height to ensure visibility
+  // height: 100%; // Prevent default fixed height
+  min-height: 94%; // Optional: a minimum height to ensure visibility
   transition: height 0.3s; // Smooth transition when resizing
 }
