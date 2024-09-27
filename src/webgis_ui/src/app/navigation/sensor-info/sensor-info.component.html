@@ -4,13 +4,15 @@
   <div class="sensor-header row">
     <!-- <span class="sensor-title">Sensor 001</span>
       <span class="sensor-status">CAM</span> -->
-    <div class="col-2">&nbsp;&nbsp;<button class="cam-button" disabled>CAM</button></div>
-    <div class="col-10"><h4 class="sensor-title">Sensor 001</h4></div>
+    <div class="col-3">
+      &nbsp;&nbsp;<button class="cam-button" disabled>CAM</button>
+    </div>
+    <div class="col-9"><h4 class="sensor-title">Sensor 001</h4></div>
   </div>
 
   <!-- Event Information -->
   <div class="event-info">
-    <p>เหตุการณ์ (Last 12 hrs):</p>
+    <a>เหตุการณ์ (Last 12 hrs):</a>
     <div class="event-counters">
       <span>Human: 2</span>
       <span>Vehicle: 3</span>
@@ -20,13 +22,13 @@
 
   <!-- Device Status -->
   <div class="device-status">
-    <span>สถานะอุปกรณ์: <strong>Good</strong></span>
+    <span>สถานะอุปกรณ์: <strong> Good </strong></span>
     <small>20 min ago</small>
   </div>
-
+  <!-- <br> -->
   <!-- Image Gallery -->
   <div class="image-gallery">
-    <h4>ภาพถ่ายที่บันทึก</h4>
+    <h5>ภาพถ่ายที่บันทึก</h5>
     <p>Latest: 2024-06-01 12:00</p>
     <img src="assets/img/basic.jpg" alt="latest image" />
 
@@ -48,8 +50,16 @@
 
   <!-- Trigger Summary -->
   <div class="trigger-summary">
-    <h4>Trigger Summary</h4>
+    <h5>Trigger Summary</h5>
     <!-- <app-bar-chart></app-bar-chart> -->
     <a href="#">Log</a>
   </div>
+  <canvas
+    baseChart
+    [data]="barChartData"
+    [labels]="barChartLabels"
+    [options]="barChartOptions"
+    [type]="barChartType"
+  >
+  </canvas>
 </div>

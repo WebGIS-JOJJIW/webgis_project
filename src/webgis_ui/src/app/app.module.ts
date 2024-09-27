@@ -13,6 +13,8 @@ import { SharedTableComponent } from './_shared/shared-table/shared-table.compon
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SensorInfoComponent } from './navigation/sensor-info/sensor-info.component'; 
 
+import { BaseChartDirective } from 'ng2-charts';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +31,9 @@ import { SensorInfoComponent } from './navigation/sensor-info/sensor-info.compon
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BaseChartDirective
+    
 ],
   providers: [],
   bootstrap: [AppComponent]
