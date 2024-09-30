@@ -14,6 +14,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SensorInfoComponent } from './navigation/sensor-info/sensor-info.component'; 
 
 import { BaseChartDirective } from 'ng2-charts';
+import { HeaderComponent } from './navigation/sensor-info/header/header.component';
+import { FooterComponent } from './navigation/sensor-info/footer/footer.component';
+import { ImagesDetailsComponent } from './navigation/sensor-info/images-details/images-details.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,10 @@ import { BaseChartDirective } from 'ng2-charts';
     LayoutComponent,
     MapComponent,
     SharedTableComponent,
-    SensorInfoComponent
+    SensorInfoComponent,
+    HeaderComponent,
+    FooterComponent,
+    ImagesDetailsComponent
   ],
   imports: [
     BrowserModule,
