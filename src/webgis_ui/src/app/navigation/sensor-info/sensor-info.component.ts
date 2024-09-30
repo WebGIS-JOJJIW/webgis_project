@@ -6,5 +6,4 @@ import { Component } from '@angular/core';
   styleUrl: './sensor-info.component.scss'
 })
 export class SensorInfoComponent {
-
 }

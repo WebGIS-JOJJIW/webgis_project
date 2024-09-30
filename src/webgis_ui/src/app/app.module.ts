@@ -13,6 +13,10 @@ import { SharedTableComponent } from './_shared/shared-table/shared-table.compon
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SensorInfoComponent } from './navigation/sensor-info/sensor-info.component'; 
 
+import { HeaderComponent } from './navigation/sensor-info/header/header.component';
+import { FooterComponent } from './navigation/sensor-info/footer/footer.component';
+import { ImagesDetailsComponent } from './navigation/sensor-info/images-details/images-details.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +27,10 @@ import { SensorInfoComponent } from './navigation/sensor-info/sensor-info.compon
     LayoutComponent,
     MapComponent,
     SharedTableComponent,
-    SensorInfoComponent
+    SensorInfoComponent,
+    HeaderComponent,
+    FooterComponent,
+    ImagesDetailsComponent
   ],
   imports: [
     BrowserModule,
