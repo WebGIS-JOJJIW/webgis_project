@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
 import * as maplibregl from 'maplibre-gl';
 import { StyleControl } from '../../../models/stylecontrol';
-
+import * as turf from '@turf/turf';
+import { GeoserverDataService } from '../../../services/geoserver/geoserver-data.service';
+import { environment } from '../../../environments/environment.dev';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -12,6 +14,7 @@ export class MapComponent implements OnInit, OnDestroy {
   @Input() defaultZoom: number = 8;
   map!: maplibregl.Map;
 
+  constructor(private GeoDataService: GeoserverDataService) { }
   ngOnInit(): void {
     console.log('in');
 
@@ -27,7 +30,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   initializeMap(): void {
     // Define available styles
-    
+
     const savedZoom = localStorage.getItem('mapZoom');
     const savedCenter = localStorage.getItem('mapCenter');
 
@@ -39,30 +42,99 @@ export class MapComponent implements OnInit, OnDestroy {
       zoom: savedZoom ? parseFloat(savedZoom) : this.defaultZoom,
     });
 
-    // ratio controller 
-    const scale = new maplibregl.ScaleControl({
-      maxWidth: 80,
-      unit: 'metric',
-    });
-    this.map.addControl(scale, 'bottom-right');
-
-    // zoom contoller
-    const nav = new maplibregl.NavigationControl();
-    this.map.addControl(nav, 'bottom-right');
-
-    // current location controller 
-    const myLocationControl = new maplibregl.GeolocateControl({
-      positionOptions: {
-        enableHighAccuracy: true // Use high accuracy if possible
-      },
-      trackUserLocation: true, // Automatically track the user's location
-      showUserLocation: true, // Show user location on the map
-    });
-    this.map.addControl(myLocationControl, 'bottom-right');
-
-    // Add the custom style control to the map
-    this.map.addControl(new StyleControl(), 'bottom-left');
+    this.loadRoadData();
+    this.initialMapController();
     this.mapEvents();
+  }
+
+  initialMapController() {
+    this.map.addControl(new maplibregl.ScaleControl({ maxWidth: 80, unit: 'metric' }), 'bottom-right');
+    this.map.addControl(new maplibregl.NavigationControl(), 'bottom-right');
+    this.map.addControl(new maplibregl.GeolocateControl({
+      positionOptions: { enableHighAccuracy: true },
+      trackUserLocation: true,
+      showUserLocation: true,
+    }), 'bottom-right');
+    this.map.addControl(new StyleControl(), 'bottom-left');
+  }
+
+
+  loadRoadData(): void {
+    this.map.on('load', () => {
+      this.addRasterOnMap();
+    });
+  }
+
+  addRasterOnMap(): void {
+    const rasterSourceId = 'my-raster-source'; // Define a unique ID for the source
+    const rasterLayerId = 'my-raster-layer'; // Define a unique ID for the layer
+    const name = '02';
+    const url = `http://138.197.163.159:8000/geoserver/gis/wms?service=WMS&version=1.1.0&request=GetMap&layers=gis%3A${name}&bbox={bbox-epsg-3857}&width=512&height=512&srs=EPSG%3A3857&styles=&format=image%2Fpng&TRANSPARENT=true` // Adjust the URL to use 'image/png' for raster tiles
+
+    // Add the WMS source
+    this.map.addSource(rasterSourceId, {
+      type: 'raster',
+      tiles: [
+        url
+      ],
+      tileSize: 512, // Define tile size
+    });
+
+    // Add the raster layer using the source
+    this.map.addLayer({
+      id: rasterLayerId,
+      type: 'raster',
+      source: rasterSourceId,
+      minzoom: 0,
+      maxzoom: 22,
+    });
+
+    // Retrieve the BBOX of the added raster layer
+    this.getRasterLayerBbox(rasterSourceId,name);
+  }
+
+  getRasterLayerBbox(sourceId: string,name :string): void {
+    const source = this.map.getSource(sourceId);
+    let bbox = ''
+    if (source) {
+      this.GeoDataService.GetLayerDetail(`${environment.geosever}/geoserver/rest/workspaces/gis/coveragestores/${name}/coverages/${name}.json`).subscribe(res => {
+        bbox = [
+          res.coverage.nativeBoundingBox.minx,  // minX
+          res.coverage.nativeBoundingBox.miny, // minY
+          res.coverage.nativeBoundingBox.maxx,  // maxX
+          res.coverage.nativeBoundingBox.maxy   // maxY
+        ].join(','); // Format as "minX,minY,maxX,maxY"
+        console.log('BBOX of the raster layer:', bbox);
+        this.setRoadOnMap(bbox)
+      })
+      // If the source exists, calculate the BBOX based on the current map bounds
+      // const bounds = this.map.getBounds();
+
+    } else {
+      console.error(`Source "${sourceId}" does not exist.`);
+    }
+  }
+
+  setRoadOnMap(bbox: string) {
+    const data = `http://138.197.163.159:8080/geoserver/gis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=gis:thailand_road&BBOX=${bbox}&outputFormat=application/json`
+
+    this.map.addSource('thailand-roads', {
+      type: 'geojson',
+      data: data
+    });
+
+    // Add a layer to display the railways
+    this.map.addLayer({
+      id: 'roads-layer',
+      type: 'line',
+      source: 'thailand-roads', // Ensure this source is defined
+      paint: {
+        'line-color': 'rgba(255, 255, 255, 0.7)', // White color with 50% opacity
+        'line-width': 2
+      }
+    });
+
+
   }
 
   setMapHeight(): void {

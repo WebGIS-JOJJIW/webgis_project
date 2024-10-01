@@ -8,8 +8,8 @@ import { environment } from '../environments/environment.dev';
 })
 export class AppComponent implements OnInit{
   ngOnInit(): void {
-    const title = environment.geosever;
-    console.log(title);
+    // const title = environment.geosever;
+    // console.log(title);
     
   }
   

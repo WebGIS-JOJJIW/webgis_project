@@ -13,10 +13,11 @@ import { SharedTableComponent } from './_shared/shared-table/shared-table.compon
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SensorInfoComponent } from './navigation/sensor-info/sensor-info.component'; 
 
-import { BaseChartDirective } from 'ng2-charts';
+// import { BaseChartDirective } from 'ng2-charts';
 import { HeaderComponent } from './navigation/sensor-info/header/header.component';
 import { FooterComponent } from './navigation/sensor-info/footer/footer.component';
 import { ImagesDetailsComponent } from './navigation/sensor-info/images-details/images-details.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ImagesDetailsComponent } from './navigation/sensor-info/images-details/
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    BaseChartDirective
+    // BaseChartDirective,
+    HttpClientModule
     
 ],
   providers: [],
