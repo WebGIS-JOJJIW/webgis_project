@@ -7,5 +7,4 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
   styleUrl: './sensor-info.component.scss'
 })
 export class SensorInfoComponent {
-  
 }
