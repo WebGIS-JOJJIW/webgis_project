@@ -6,3 +6,6 @@ npx playwright test --debug
 
 # Run PlayWright Test without Debug 
 npx playwright test
+
+# Show Report after finished test
+npx playwright show-report
