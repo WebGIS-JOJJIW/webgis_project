@@ -16,8 +16,6 @@ export class MapComponent implements OnInit, OnDestroy {
 
   constructor(private GeoDataService: GeoserverDataService) { }
   ngOnInit(): void {
-    console.log('in');
-
     this.initializeMap();
     this.setMapHeight(); // Set initial map height
   }
@@ -58,7 +56,6 @@ export class MapComponent implements OnInit, OnDestroy {
     this.map.addControl(new StyleControl(), 'bottom-left');
   }
 
-
   loadRoadData(): void {
     this.map.on('load', () => {
       this.addRasterOnMap();
@@ -90,10 +87,10 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     // Retrieve the BBOX of the added raster layer
-    this.getRasterLayerBbox(rasterSourceId,name);
+    this.getRasterLayerBbox(rasterSourceId, name);
   }
 
-  getRasterLayerBbox(sourceId: string,name :string): void {
+  getRasterLayerBbox(sourceId: string, name: string): void {
     const source = this.map.getSource(sourceId);
     let bbox = ''
     if (source) {
@@ -104,7 +101,7 @@ export class MapComponent implements OnInit, OnDestroy {
           res.coverage.nativeBoundingBox.maxx,  // maxX
           res.coverage.nativeBoundingBox.maxy   // maxY
         ].join(','); // Format as "minX,minY,maxX,maxY"
-        console.log('BBOX of the raster layer:', bbox);
+        // console.log('BBOX of the raster layer:', bbox);
         this.setRoadOnMap(bbox)
       })
       // If the source exists, calculate the BBOX based on the current map bounds
@@ -133,8 +130,6 @@ export class MapComponent implements OnInit, OnDestroy {
         'line-width': 2
       }
     });
-
-
   }
 
   setMapHeight(): void {
