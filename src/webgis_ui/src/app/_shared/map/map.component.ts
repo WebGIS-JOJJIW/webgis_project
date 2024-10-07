@@ -31,7 +31,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   initializeMap(): void {
-
     const flag = this.router.url == localStorage.getItem('page') ;
     const savedZoom =localStorage.getItem('mapZoom') 
     const savedCenter =localStorage.getItem('mapCenter')
@@ -49,6 +48,11 @@ export class MapComponent implements OnInit, OnDestroy {
       this.mapEvents()
     });
   }
+
+  setNewMap(newMap :maplibregl.Map):void {
+    this.map = newMap;
+  }
+
 
   mapEvents(): void {
     this.map.on('zoomend', () => {

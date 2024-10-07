@@ -8,14 +8,20 @@ import { environment } from '../../../environments/environment.dev';
   templateUrl: './live-monitor.component.html',
   styleUrl: './live-monitor.component.scss'
 })
-export class LiveMonitorComponent implements OnInit,AfterViewInit{
+export class LiveMonitorComponent implements AfterViewInit {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
-  constructor(private GeoDataService: GeoserverDataService){}
-  ngOnInit(): void {
-    // Call the addLayer function to add the layer as soon as the page loads
-    // this.addCustomLayer();
+  constructor(private GeoDataService: GeoserverDataService) { }
+  ngAfterViewInit(): void {
+    // Option 1: Try setting a short timeout to ensure the map has fully initialized
+    setTimeout(() => {
+      if (this.mapComponent) {
+        // this.addCustomLayer();
+        this.addRasterOnMap();
+      } else {
+        console.error('MapComponent is still not initialized.');
+      }
+    }, 500); // Adjust the delay if needed
   }
-
   addCustomLayer(): void {
     const source: maplibregl.SourceSpecification = {
       type: 'geojson',
@@ -52,7 +58,6 @@ export class LiveMonitorComponent implements OnInit,AfterViewInit{
     }
   }
 
-  
   eventsData = [
     { date: '2024-06-01 10:14:59', type: 'Alarm', system: 'SENSOR', details: 'Sensor 002 Alarm - Human Detection' },
     { date: '2024-06-01 08:02:40', type: 'Info', system: 'SENSOR', details: 'Sensor Health Check - On' },
@@ -72,31 +77,6 @@ export class LiveMonitorComponent implements OnInit,AfterViewInit{
   onSearch(term: string) {
     console.log('Searching for:', term);
   }
-
-  ngAfterViewInit(): void {
-    console.log('MapComponent:', this.mapComponent);  // Check if MapComponent is defined
-  
-    // Option 1: Try setting a short timeout to ensure the map has fully initialized
-    setTimeout(() => {
-      if (this.mapComponent) {
-        // this.addCustomLayer();
-        this.addRasterOnMap();
-      } else {
-        console.error('MapComponent is still not initialized.');
-      }
-    }, 500); // Adjust the delay if needed
-  }
-
-  // ngAfterViewInit(): void {
-  //   if (this.mapComponent) {
-  //     // Ensure the map is loaded before adding layers
-  //     this.mapComponent.map?.on('load', () => {
-  //       this.addRasterOnMap();
-  //     });
-  //   } else {
-  //     console.error('MapComponent is not initialized.');
-  //   }
-  // }
 
   addRasterOnMap(): void {
     const rasterSourceId = 'my-raster-source';
@@ -163,5 +143,5 @@ export class LiveMonitorComponent implements OnInit,AfterViewInit{
     // Add road layer to the map
     this.mapComponent.addLayer(roadLayer, roadSource, roadsSourceId);
   }
-  
+
 }
