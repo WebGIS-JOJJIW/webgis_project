@@ -46,5 +46,35 @@ export class EditorMapComponent implements  AfterViewInit {
       antialias: true
     });
     this.mapComponent.setNewMap(newMap);
+
+    const Source: maplibregl.SourceSpecification = {
+      'type': 'geojson',
+      'data': 'https://maplibre.org/maplibre-gl-js/docs/assets/indoor-3d-map.geojson'
+    };
+    const Layer: maplibregl.LayerSpecification = {
+      'id': 'room-extrusion',
+      'type': 'fill-extrusion',
+      'source': 'floorplan',
+      'paint': {
+        // See the MapLibre Style Specification for details on data expressions.
+        // https://maplibre.org/maplibre-style-spec/expressions/
+
+        // Get the fill-extrusion-color from the source 'color' property.
+        'fill-extrusion-color': ['get', 'color'],
+
+        // Get fill-extrusion-height from the source 'height' property.
+        'fill-extrusion-height': ['get', 'height'],
+
+        // Get fill-extrusion-base from the source 'base_height' property.
+        'fill-extrusion-base': ['get', 'base_height'],
+
+        // Make extrusions slightly opaque for see through indoor walls.
+        'fill-extrusion-opacity': 0.5
+      }
+    };
+
+
+    this.mapComponent.addLayer(Layer,Source,'floorplan');
+    
   }
 }

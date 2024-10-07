@@ -11,16 +11,16 @@ import { Router } from '@angular/router';
 export class MapComponent implements OnInit, OnDestroy {
   @Input() defaultCenter: [number, number] = [100.5018, 13.7563];
   @Input() defaultZoom: number = 8;
-  
+
   map!: maplibregl.Map;
 
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    
+
     this.initializeMap();
     this.setMapHeight();
-    
+
   }
 
   @HostListener('window:resize', ['$event'])
@@ -29,10 +29,10 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   initializeMap(): void {
-    const flag = this.router.url == localStorage.getItem('page') ;
-    const savedZoom =localStorage.getItem('mapZoom') 
-    const savedCenter =localStorage.getItem('mapCenter')
-    
+    const flag = this.router.url == localStorage.getItem('page');
+    const savedZoom = localStorage.getItem('mapZoom')
+    const savedCenter = localStorage.getItem('mapCenter')
+
     this.map = new maplibregl.Map({
       container: 'map',
       style: 'https://api.maptiler.com/maps/basic-v2/style.json?key=89niYR6Aow3J66RlqxlA',
@@ -47,7 +47,7 @@ export class MapComponent implements OnInit, OnDestroy {
     });
   }
 
-  setNewMap(newMap :maplibregl.Map):void {
+  setNewMap(newMap: maplibregl.Map): void {
     this.map = newMap;
   }
 
@@ -62,7 +62,7 @@ export class MapComponent implements OnInit, OnDestroy {
       localStorage.setItem('mapCenter', JSON.stringify([center.lng, center.lat]));
     });
 
-    localStorage.setItem('page',this.router.url)
+    localStorage.setItem('page', this.router.url)
   }
 
 
@@ -79,19 +79,22 @@ export class MapComponent implements OnInit, OnDestroy {
 
 
   addLayer(layer: maplibregl.LayerSpecification, source: maplibregl.SourceSpecification, id: string): void {
-    // Add source first
-    if (!this.map.getSource(id)) {
-      this.map.addSource(id, source);
-    } else {
-      console.warn(`Source with id "${id}" already exists.`);
-    }
-  
-    // Add layer with the provided options
-    if (!this.map.getLayer(layer.id)) {
-      this.map.addLayer(layer);
-    } else {
-      console.warn(`Layer with id "${layer.id}" already exists.`);
-    }
+    this.map.on('load', () => {
+      // Add source first
+      if (!this.map.getSource(id)) {
+        this.map.addSource(id, source);
+      } else {
+        console.warn(`Source with id "${id}" already exists.`);
+      }
+
+      // Add layer with the provided options
+      if (!this.map.getLayer(layer.id)) {
+        this.map.addLayer(layer);
+      } else {
+        console.warn(`Layer with id "${layer.id}" already exists.`);
+      }
+    });
+
   }
 
   removeLayer(layerId: string, sourceId: string): void {

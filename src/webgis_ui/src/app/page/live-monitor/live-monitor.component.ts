@@ -8,19 +8,20 @@ import { environment } from '../../../environments/environment.dev';
   templateUrl: './live-monitor.component.html',
   styleUrl: './live-monitor.component.scss'
 })
-export class LiveMonitorComponent implements AfterViewInit {
+export class LiveMonitorComponent implements AfterViewInit{
   @ViewChild(MapComponent) mapComponent!: MapComponent;
-  constructor(private GeoDataService: GeoserverDataService) { }
+  constructor(private GeoDataService: GeoserverDataService){}
   ngAfterViewInit(): void {
+    this.addRasterOnMap();
     // Option 1: Try setting a short timeout to ensure the map has fully initialized
-    setTimeout(() => {
-      if (this.mapComponent) {
-        // this.addCustomLayer();
-        this.addRasterOnMap();
-      } else {
-        console.error('MapComponent is still not initialized.');
-      }
-    }, 500); // Adjust the delay if needed
+    // setTimeout(() => {
+    //   if (this.mapComponent) {
+    //     // this.addCustomLayer();
+        
+    //   } else {
+    //     console.error('MapComponent is still not initialized.');
+    //   }
+    // }, 500); // Adjust the delay if needed
   }
   addCustomLayer(): void {
     const source: maplibregl.SourceSpecification = {
@@ -121,6 +122,8 @@ export class LiveMonitorComponent implements AfterViewInit {
   }
 
   setRoadOnMap(bbox: string): void {
+    console.log('road');
+    
     const roadsSourceId = 'thailand-roads';
     const roadLayerId = 'roads-layer';
     const roadsUrl = `http://138.197.163.159:8080/geoserver/gis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=gis:thailand_road&BBOX=${bbox}&outputFormat=application/json`;
@@ -137,11 +140,12 @@ export class LiveMonitorComponent implements AfterViewInit {
       paint: {
         'line-color': 'rgba(255, 255, 255, 0.7)',
         'line-width': 2
-      }
+      },
+      minzoom : 14
     };
 
     // Add road layer to the map
     this.mapComponent.addLayer(roadLayer, roadSource, roadsSourceId);
   }
-
+  
 }
