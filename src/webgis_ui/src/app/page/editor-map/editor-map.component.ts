@@ -73,8 +73,8 @@ export class EditorMapComponent implements  AfterViewInit {
       }
     };
 
-
-    this.mapComponent.addLayer(Layer,Source,'floorplan');
-    
+    this.mapComponent.map.once('load',()=>{
+      this.mapComponent.addLayer(Layer,Source,'floorplan');
+    })
   }
 }

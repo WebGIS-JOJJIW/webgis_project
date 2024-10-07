@@ -51,7 +51,6 @@ export class MapComponent implements OnInit, OnDestroy {
     this.map = newMap;
   }
 
-
   mapEvents(): void {
     this.map.on('zoomend', () => {
       const zoomLevel = this.map.getZoom();
@@ -79,21 +78,15 @@ export class MapComponent implements OnInit, OnDestroy {
 
 
   addLayer(layer: maplibregl.LayerSpecification, source: maplibregl.SourceSpecification, id: string): void {
-    this.map.on('load', () => {
       // Add source first
       if (!this.map.getSource(id)) {
         this.map.addSource(id, source);
-      } else {
-        console.warn(`Source with id "${id}" already exists.`);
-      }
+      } 
 
       // Add layer with the provided options
       if (!this.map.getLayer(layer.id)) {
         this.map.addLayer(layer);
-      } else {
-        console.warn(`Layer with id "${layer.id}" already exists.`);
-      }
-    });
+      } 
 
   }
 
