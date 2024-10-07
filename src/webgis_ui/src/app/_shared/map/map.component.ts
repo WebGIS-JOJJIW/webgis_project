@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core';
 import * as maplibregl from 'maplibre-gl';
-import { GeoserverDataService } from '../../../services/geoserver/geoserver-data.service';
-import { environment } from '../../../environments/environment.dev';
 import { StyleControl } from '../../../models/stylecontrol';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map',
