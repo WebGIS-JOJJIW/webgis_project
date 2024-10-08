@@ -4,16 +4,21 @@
   </div>
   <div class="row">
     <!-- Sidebar -->
-    <div class="sidebar col-auto" >
+    <div class="sidebar col-auto">
       <app-side-bar></app-side-bar>
     </div>
     <!-- Main Content -->
-    <div class="content col ">
-      <div id="top-row" style="border: 2px solid #0a493b;">
+    <div class="content col">
+      <div id="top-row" style="border: 2px solid #0a493b">
         <router-outlet></router-outlet>
       </div>
-      <div class="" id="bottom-row" style="border: 2px solid #0a493b;">
-        <div class="header">เหตุการณ์ล่าสุด</div>
+      <div class="" id="bottom-row" style="border: 2px solid #0a493b">
+        <div class="header">
+          เหตุการณ์ล่าสุด
+          <button class="close-button">
+            <img src="assets/icons/shrink.png" alt="Close" class="close-icon" />
+          </button>
+        </div>
         <app-shared-table
           [data]="eventsData"
           [columns]="columnsConfig"
@@ -23,7 +28,7 @@
         </app-shared-table>
       </div>
     </div>
-    <div class="col-3" style="border: 2px solid #0a493b; height: 93vh;">
+    <div class="col-3" style="border: 2px solid #0a493b; height: 93vh">
       <app-sensor-info></app-sensor-info>
     </div>
   </div>

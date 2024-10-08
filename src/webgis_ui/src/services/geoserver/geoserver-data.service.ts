@@ -20,32 +20,37 @@ export class GeoserverDataService {
         };
     }
 
-    InsertLayer(payload: string, workspace: string, db: string): Observable<any> {
+    insertLayer(payload: string, workspace: string, db: string): Observable<any> {
         const url = `${this.proxy_geo}/geoserver/rest/workspaces/${workspace}/datastores/${db}/featuretypes/`
         return this.http.post(url, payload, this.httpOptions);
     }
 
-    PutLayer(payload: string, res: any) {
+    putLayer(payload: string, res: any) {
         const url = `${this.proxy_geo}/geoserver/rest/workspaces/${res.workspace}/datastores/${res.dbName}/featuretypes/${res.layerName}`
         return this.http.put(url, payload, this.httpOptions);
     }
 
-    GetLayerLists(): Observable<any> {
+    getLayerLists(): Observable<any> {
         const url = `${this.proxy_geo}/geoserver/rest/layers?Accept=application/json`
         return this.http.get<any>(url, this.httpOptions);
     }
 
-    GetLayerDetail(Url: string): Observable<any> {
+    getLayerOptions(Url: string): Observable<any> {
         const re = /http.*8080/gi;
         const corrected_url = Url.replace(re, `${this.proxy_geo}`);
         // const corrected_url = url.replace(re, `http://139.59.221.224:8000`);
         return this.http.get<any>(corrected_url, this.httpOptions);
     }
 
-    GetAbstract(LayerName: string): Observable<string> {
+    getLayerAbstract(LayerName: string): Observable<string> {
         const url = `${this.proxy_geo}/geoserver/rest/workspaces/gis/datastores/gis_db/featuretypes/${LayerName}.json`;
-        return this.http.get<any>(url).pipe(
+        return this.http.get<any>(url, this.httpOptions).pipe(
             map((res: any) => res.featureType.abstract)
         );
+    }
+
+    getFeatures(name: string): Observable<any> {
+        const url = `${this.proxy_geo}/geoserver/gis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=${name}&outputFormat=application/json`
+        return this.http.get<any>(url, this.httpOptions);
     }
 }

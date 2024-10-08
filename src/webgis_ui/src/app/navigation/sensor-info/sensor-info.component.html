@@ -1,12 +1,47 @@
-<div class="header">ข้อมูลเซนเซอร์</div>
-<div class="sensor-container">
-    <div class="row mb-2">
-        <app-header></app-header>
+<div class="header">
+  ข้อมูลเซนเซอร์
+  <button class="close-button" (click)="onClose()">×</button>
+</div>
+<div class="sensor-container" *ngIf="isSensorDetails">
+  <div class="row mb-2">
+    <app-header [name]="sensorName"></app-header>
+  </div>
+  <div class="row bordered-row">
+    <app-images-details></app-images-details>
+  </div>
+  <div class="row">
+    <app-footer></app-footer>
+  </div>
+</div>
+
+<div class="sensor-card" *ngIf="!isSensorDetails">
+  <div class="sensor-header">
+    <strong>Sensor 001</strong>
+    <span class="latest-time">Latest: 2024-10-08 12:01:00</span>
+  </div>
+
+  <div class="sensor-content">
+    <div class="sensor-data">
+      <span class="category">Human:</span> <span class="count">2</span>
+      <div class="sensor-images">
+        <img src="assets/img/mt.jpeg" alt="Human 1" />
+        <img src="assets/img/mt.jpeg" alt="Human 2" />
+      </div>
     </div>
-    <div class="row bordered-row">
-        <app-images-details></app-images-details>
+
+    <div class="sensor-data">
+      <span class="category">Vehicle:</span> <span class="count">1</span>
+      <div class="sensor-images">
+        <img src="assets/img/mt.jpeg" alt="Vehicle" />
+      </div>
     </div>
-    <div class="row">
-        <app-footer></app-footer>
+
+    <div class="sensor-data">
+      <span class="category">Other:</span>
+      <span class="count">1 <em>(Animal)</em></span>
+      <div class="sensor-images">
+        <img src="assets/img/mt.jpeg" alt="Other" />
+      </div>
     </div>
+  </div>
 </div>

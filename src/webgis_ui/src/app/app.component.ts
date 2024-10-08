@@ -6,11 +6,7 @@ import { environment } from '../environments/environment.dev';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit{
-  ngOnInit(): void {
-    // const title = environment.geosever;
-    // console.log(title);
-    
-  }
+export class AppComponent{
+  
   
 }

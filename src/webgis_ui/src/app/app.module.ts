@@ -18,6 +18,7 @@ import { HeaderComponent } from './navigation/sensor-info/header/header.componen
 import { FooterComponent } from './navigation/sensor-info/footer/footer.component';
 import { ImagesDetailsComponent } from './navigation/sensor-info/images-details/images-details.component';
 import { HttpClientModule } from '@angular/common/http';
+import { LoadingComponent } from './_shared/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { HttpClientModule } from '@angular/common/http';
     SensorInfoComponent,
     HeaderComponent,
     FooterComponent,
-    ImagesDetailsComponent
+    ImagesDetailsComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

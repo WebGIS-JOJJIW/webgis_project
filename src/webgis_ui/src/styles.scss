@@ -4,11 +4,22 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #0B2026 !important;
+  background-color: #0b2026 !important;
 }
 
-body, h1, h2, h3, h4, h5, h6, p, a, span, div, input {
-  font-family: 'Noto Sans Thai Looped', sans-serif !important;
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+span,
+div,
+input {
+  font-family: "Noto Sans Thai Looped", sans-serif !important;
 }
 
 // .container-fluid {
@@ -23,7 +34,7 @@ body, h1, h2, h3, h4, h5, h6, p, a, span, div, input {
 .sidebar {
   flex: 0 0 64px;
   max-width: 64px;
-  background-color: #1E2F36; // Optional: Add a background color for clarity
+  background-color: #1e2f36; // Optional: Add a background color for clarity
   // height: 100vh;
 }
 
@@ -33,7 +44,7 @@ body, h1, h2, h3, h4, h5, h6, p, a, span, div, input {
   flex-direction: column;
   // height: 100vh;
   padding-left: 0;
-  
+
   #top-row {
     flex-grow: 1;
     height: 60%;
@@ -51,7 +62,7 @@ body, h1, h2, h3, h4, h5, h6, p, a, span, div, input {
   max-width: 100%;
   margin-top: var(--bs-gutter-y);
   padding-right: 0 !important; // Override padding
-  padding-left: 0 !important;  // Override padding
+  padding-left: 0 !important; // Override padding
 }
 
 /* The switch container */
@@ -101,16 +112,61 @@ body, h1, h2, h3, h4, h5, h6, p, a, span, div, input {
 }
 
 .header {
-  // font-size: 1.2em;
-  background-color: #475A59;
+  background-color: #475a59;
   padding: 4px 10px;
   text-align: left;
   color: white;
-  // border: 2px solid #212529;
-  // font-weight: 400  ;
-  /* font-weight: bold; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .close-button {
+    background: none;
+    border: none;
+    color: white;
+    // font-size: 1.5em;
+    cursor: pointer;
+    padding: 0;
+
+    .close-icon {
+      width: 20px; /* Adjust icon size */
+      height: 20px; /* Adjust icon size */
+      object-fit: contain; /* Ensures the icon keeps its aspect ratio */
+      display: flex; /* Make the button a flex container */
+      align-items: center; /* Align the button vertically within the header */
+    }
+
+    &:hover {
+      color: #ff6666; /* Optional: Change color on hover */
+    }
+  }
 }
 
-.mb-1{
+.mb-1 {
   margin-bottom: 10px;
+}
+
+/* สำหรับ WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 12px; /* ความกว้างของ scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* สีพื้นหลังของ track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* สีของ scrollbar */
+  border-radius: 10px; /* ความโค้งมน */
+  border: 3px solid #f1f1f1; /* เพิ่มขอบใน scrollbar */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* สีของ scrollbar เมื่อ hover */
+}
+
+/* สำหรับ Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
 }

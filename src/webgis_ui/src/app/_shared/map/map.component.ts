@@ -20,6 +20,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.initializeMap();
     this.setMapHeight();
+    this.addCustomImages();
 
   }
 
@@ -102,6 +103,18 @@ export class MapComponent implements OnInit, OnDestroy {
 
   setMapHeight(): void {
     // Adjust the map height based on window size
+  }
+
+  addCustomImages(): void {
+    // Add your custom marker image
+    const imgUrl = 'assets/img/location.svg'; // Replace with your image URL
+    const img = new Image(25, 25); // Adjust the size as needed
+    img.onload = () => {
+      if (!this.map.hasImage('custom-marker')) {
+        this.map.addImage('custom-marker', img);
+      }
+    };
+    img.src = imgUrl;
   }
 
   ngOnDestroy(): void {

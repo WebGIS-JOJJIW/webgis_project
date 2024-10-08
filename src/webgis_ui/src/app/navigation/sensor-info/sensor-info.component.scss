@@ -19,3 +19,68 @@ span {
   padding: 0 0 10px /* Optional: Add some padding */
 }
 
+strong{
+  text-transform: uppercase;
+}
+
+.sensor-card {
+  background-color: #1e2c36;
+  padding: 10px;
+  margin: 10px 0;
+  color: #fff;
+  // border-radius: 5px;
+  border-bottom: 1px solid #3b4d59;
+}
+
+.sensor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // border-bottom: 1px solid #3b4d59;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.sensor-header strong {
+  color: #ba84ff; /* Light purple */
+  font-size: 1.1rem;
+}
+
+.sensor-header .latest-time {
+  color: #9eb1c2;
+  font-size: 0.9rem;
+}
+
+.sensor-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.sensor-data {
+  margin-bottom: 10px;
+}
+
+.sensor-data .category {
+  font-weight: bold;
+  color: #f2f2f2;
+}
+
+.sensor-data .count {
+  color: #26ff94; /* Light green */
+}
+
+.sensor-images {
+  display: flex;
+  gap: 5px;
+}
+
+.sensor-images img {
+  width: 50px;
+  height: auto;
+  border-radius: 3px;
+}
+
+.sensor-data em {
+  font-style: italic;
+  color: #26ff94;
+}

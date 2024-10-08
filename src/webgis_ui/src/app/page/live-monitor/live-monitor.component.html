@@ -1,2 +1,9 @@
-<div class="header" style="border-left: 0px;">กองกำลังบูรพา</div>
-<app-map [defaultCenter]="[102.49093506135182,16.527633661913455]" [defaultZoom]="13"></app-map>
+<app-loading [isLoading]="isLoading"></app-loading>
+
+<div class="header" style="border-left: 0px">
+  กองกำลังบูรพา
+  <button class="close-button">
+    <img src="assets/icons/shrink.png" alt="Close" class="close-icon" />
+  </button>
+</div>
+<app-map [defaultCenter]="[102.5552, 13.6705]" [defaultZoom]="15"></app-map>

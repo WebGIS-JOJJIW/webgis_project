@@ -1,89 +1,96 @@
 .event-table-container {
-  background-color: #1B3036;
-  padding: 10px;
-//   height: 100%;
-
-  .filters {
+    padding: 10px;
+  
+    .filters {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
-
+  
       .checkboxes {
-          label {
-              margin-right: 15px;
-              color: #fff;
-          }
-          input[type="checkbox"] {
-              margin-right: 5px;
-          }
+        label {
+          margin-right: 15px;
+          color: #fff;
+        }
+        input[type="checkbox"] {
+          margin-right: 5px;
+        }
       }
-
+  
       .search-bar {
-          position: relative;
-
-          input {
-              background-color: #465260;
-              border: none;
-              color: white;
-              padding: 5px 10px;
-              border-radius: 5px;
-          }
-
-          .fa-search {
-              position: absolute;
-              right: 10px;
-              top: 50%;
-              transform: translateY(-50%);
-              color: #fff;
-          }
+        position: relative;
+  
+        input {
+          background-color: #465260;
+          border: none;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 5px;
+        }
+  
+        .fa-search {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #fff;
+        }
       }
-
+  
       .filter-icon {
-          i {
-              color: white;
-              font-size: 20px;
-              cursor: pointer;
-          }
+        i {
+          color: white;
+          font-size: 20px;
+          cursor: pointer;
+        }
       }
-  }
-
-  .table-wrapper {
-      max-height: 27vh;  /* Adjust the height as needed */
-      overflow-y: auto;  /* Enable vertical scrolling */
+    }
+  
+    .table-wrapper {
+      max-height: 27vh; /* Adjust the height as needed */
+      overflow-y: auto; /* Enable vertical scrolling */
       position: relative; /* Required for absolute positioning of the header */
-  }
-
-  table {
+    }
+  
+    table {
       color: #fff;
       width: 100%;
-      border-collapse: collapse; /* Ensure borders are collapsed for better appearance */
-
+      border-collapse: collapse; /* Ensure borders are collapsed */
+      border-left: none; /* Remove the border on the left */
+      border-right: none; /* Remove the border on the right */
+  
       thead {
-          th {
-              background-color: #38434d;
-              color: white;
-              padding: 10px;
-              text-align: left;
-              position: sticky; /* Make header sticky */
-              top: 0; /* Position the sticky header at the top */
-              z-index: 1; /* Ensure the header appears above the table body */
-          }
+        th {
+          background-color: transparent;
+          color: white;
+          padding: 10px;
+          text-align: left;
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          border-top: 1px solid #555; /* Only top border for the header */
+          border-bottom: 1px solid #555; /* Only bottom border for the header */
+        }
       }
-
+  
       tbody {
-          tr {
-              &:nth-child(odd) {
-                  background-color: #333b44;
-              }
-              &:nth-child(even) {
-                  background-color: #2b333b;
-              }
-
-              td {
-                  padding: 5px;
-              }
+        tr {
+          &:nth-child(odd) {
+            background-color: transparent;
           }
+          &:nth-child(even) {
+            background-color: transparent;
+          }
+  
+          td {
+            padding: 5px;
+            border-top: 1px solid #555; /* Only top border between rows */
+            border-bottom: 1px solid #555; /* Only bottom border between rows */
+            background-color: transparent;
+            color: #fff;
+          }
+        }
       }
+    }
   }
-}
+  

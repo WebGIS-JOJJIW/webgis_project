@@ -2,6 +2,8 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { GeoserverDataService } from '../../../services/geoserver/geoserver-data.service';
 import { MapComponent } from '../../_shared/map/map.component';
 import { environment } from '../../../environments/environment.dev';
+import { GeoJSONSource } from 'maplibre-gl';
+import { SharedService } from '../../_shared/services/shared.service';
 
 @Component({
   selector: 'app-live-monitor',
@@ -9,67 +11,144 @@ import { environment } from '../../../environments/environment.dev';
   styleUrl: './live-monitor.component.scss'
 })
 export class LiveMonitorComponent implements AfterViewInit {
+  isLoading: boolean = true; // Initially set to true to show the loading spinner
   @ViewChild(MapComponent) mapComponent!: MapComponent;
-  constructor(private GeoDataService: GeoserverDataService) { }
+
+  constructor(private GeoDataService: GeoserverDataService, private _sharedService: SharedService) { }
   ngAfterViewInit(): void {
     this.addRasterOnMap();
-  }
-  addCustomLayer(): void {
-    const source: maplibregl.SourceSpecification = {
-      type: 'geojson',
-      data: {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [100.5018, 13.7563],
-            },
-            properties: {}
-          }
-        ]
-      }
-    };
 
-    const layer: maplibregl.LayerSpecification = {
-      id: 'custom-layer',
-      type: 'circle',
-      source: 'custom-source',  // The id for the source
-      paint: {
-        'circle-radius': 6,
-        'circle-color': '#B42222'
-      }
-    };
-
-    // Call the addLayer function in MapComponent
-    if (this.mapComponent) {
-      this.mapComponent.addLayer(layer, source, 'custom-source');
-    } else {
-      console.error('MapComponent is not initialized.');
-    }
+    this.mapComponent.map.once('load', () => {
+      this.addPOILayer();
+    })
   }
 
-  eventsData = [
-    { date: '2024-06-01 10:14:59', type: 'Alarm', system: 'SENSOR', details: 'Sensor 002 Alarm - Human Detection' },
-    { date: '2024-06-01 08:02:40', type: 'Info', system: 'SENSOR', details: 'Sensor Health Check - On' },
-    { date: '2024-06-01 07:10:00', type: 'Alarm', system: 'SENSOR', details: 'Sensor 001 Alarm - Vehicle Detection' },
-    { date: '2024-06-01 07:04:20', type: 'Alarm', system: 'SENSOR', details: 'Sensor 004 Alarm - Vehicle Detection' },
-    { date: '2024-06-01 06:43:41', type: 'Info', system: 'SERVER', details: 'Storage Update' },
-    { date: '2024-06-01 06:16:00', type: 'Info', system: 'SENSOR', details: 'Sensor 003 Alarm - Human Detection' }
-  ];
+  addPOILayer(): void {
+    const layerId = 'poi_marker'
+    this.GeoDataService.getFeatures('sensors').subscribe(res => {
+      console.log(res);
 
-  columnsConfig = [
-    { header: 'วันที่', field: 'date' },
-    { header: 'ประเภท', field: 'type' },
-    { header: 'ระบบ', field: 'system' },
-    { header: 'รายละเอียด', field: 'details' }
-  ];
+      // // Add a new GeoJSON source with clustering enabled
+      this.mapComponent.map.addSource(layerId, {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: res.features
+        },
+        cluster: true,               // Enable clustering
+        clusterMaxZoom: 14,           // Stop clustering at zoom level 14
+        clusterRadius: 50            // Cluster radius in pixels
+      });
 
-  onSearch(term: string) {
-    console.log('Searching for:', term);
+      // Add clustered points layer
+      this.mapComponent.map.addLayer({
+        id: `${layerId}-clusters`,
+        type: 'circle',
+        source: layerId,
+        filter: ['has', 'point_count'],  // Only show clusters with this filter
+        paint: {
+          'circle-color': [
+            'step',
+            ['get', 'point_count'],
+            'red', 100, 'red', 750, 'red'
+          ],
+          'circle-radius': [
+            'step',
+            ['get', 'point_count'],
+            20, 100, 30, 750, 40
+          ]
+        }
+      });
+
+      // Add unclustered points layer
+      this.mapComponent.map.addLayer({
+        id: `${layerId}-unclustered`,
+        type: 'symbol',
+        source: layerId,
+        filter: ['!', ['has', 'point_count']], // Filter for unclustered points
+        layout: {
+          'icon-image': 'custom-marker',
+          'icon-size': 1.2,
+          'text-field': '{name}',
+          'text-offset': [0, 1.15],
+          'text-anchor': 'top'
+        }
+      });
+
+      // Add a layer for the cluster count labels
+      this.mapComponent.map.addLayer({
+        id: `${layerId}-cluster-count`,
+        type: 'symbol',
+        source: layerId,
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-size': 16
+        }, paint: {
+          'text-color': '#ffffff',  // Set the text color to white
+        }
+      });
+
+      // Click event for clusters to zoom in
+      this.mapComponent.map.on('click', `${layerId}-clusters`, (e) => {
+        const features = this.mapComponent.map.queryRenderedFeatures(e.point, {
+          layers: [`${layerId}-clusters`]
+        });
+
+        if (!features.length) return;
+
+        const clusterId = features[0].properties['cluster_id'];
+
+        // Narrowing down the geometry type
+        const geometry = features[0].geometry;
+        if (geometry.type === 'Point') {
+          const coordinates = geometry.coordinates as [number, number]; // Safely cast coordinates
+          const source = this.mapComponent.map.getSource(layerId) as GeoJSONSource;
+          source.getClusterExpansionZoom(clusterId).then((zoom: number) => {
+            this.mapComponent.map.easeTo({
+              center: coordinates, // Use the narrowed coordinates
+              zoom: zoom
+            });
+          }).catch((err: any) => {
+            console.error('Error getting cluster expansion zoom:', err);
+          });
+        } else {
+          console.error('Expected a Point geometry but got:', geometry.type);
+        }
+      });
+
+      // Click event for unclustered points
+      this.mapComponent.map.on('click', `${layerId}-unclustered`, (e) => {
+
+        const features = this.mapComponent.map.queryRenderedFeatures(e.point, {
+          layers: [`${layerId}-unclustered`]
+        });
+       const name = features[0].properties['name'];
+
+        if (name) {
+          // console.log(name);
+          this._sharedService.setIsSensorDetails(true,name);
+        }
+      });
+
+      // // Change the cursor to a pointer when over clusters or unclustered points
+      // this.mapComponent.map.on('mouseenter', `${layerId}-clusters`, () => {
+      //   this.mapComponent.map.getCanvas().style.cursor = 'pointer';
+      // });
+      // this.mapComponent.map.on('mouseenter', `${layerId}-unclustered`, () => {
+      //   this.mapComponent.map.getCanvas().style.cursor = 'pointer';
+      // });
+
+      // this.mapComponent.map.on('mouseleave', `${layerId}-clusters`, () => {
+      //   this.mapComponent.map.getCanvas().style.cursor = '';
+      // });
+      // this.mapComponent.map.on('mouseleave', `${layerId}-unclustered`, () => {
+      //   this.mapComponent.map.getCanvas().style.cursor = '';
+      // });
+    });
   }
 
+  //#region  Raster && Road 
   addRasterOnMap(): void {
     const rasterSourceId = 'my-raster-source';
     const rasterLayerId = 'my-raster-layer';
@@ -94,14 +173,16 @@ export class LiveMonitorComponent implements AfterViewInit {
       // Add raster layer to the map
       this.mapComponent.addLayer(rasterLayer, rasterSource, rasterSourceId);
     })
-
-
     // Retrieve and handle the BBOX for the raster layer
-    this.getRasterLayerBbox(name);
+
+    setTimeout(() => {
+      this.getRasterLayerBbox(name);
+      this.isLoading = false;
+    }, 1500);
   }
 
   getRasterLayerBbox(name: string): void {
-    this.GeoDataService.GetLayerDetail(`${environment.geosever}/geoserver/rest/workspaces/gis/coveragestores/${name}/coverages/${name}.json`)
+    this.GeoDataService.getLayerOptions(`${environment.geosever}/geoserver/rest/workspaces/gis/coveragestores/${name}/coverages/${name}.json`)
       .subscribe(res => {
         const bbox = [
           res.coverage.nativeBoundingBox.minx,
@@ -136,7 +217,7 @@ export class LiveMonitorComponent implements AfterViewInit {
         'line-width': 2
       }
     };
-    if(this.mapComponent.map.getZoom()){
+    if (this.mapComponent.map.getZoom()) {
       if (this.mapComponent.map.getZoom() > 11) {
         this.mapComponent.addLayer(roadLayer, roadSource, roadsSourceId);
       }
@@ -153,5 +234,5 @@ export class LiveMonitorComponent implements AfterViewInit {
       }
     })
   }
-
+  //#endregion
 }
