@@ -1,6 +1,6 @@
 <div class="header">
   ข้อมูลเซนเซอร์
-  <button class="close-button" (click)="onClose()">×</button>
+  <button *ngIf="isSensorDetails" class="close-button" (click)="onClose()">×</button>
 </div>
 <div class="sensor-container" *ngIf="isSensorDetails">
   <div class="row mb-2">
