@@ -1,11 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectorRef, ChangeDetectionStrategy,SimpleChanges, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-shared-table',
   templateUrl: './shared-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ['./shared-table.component.scss']
 })
-export class SharedTableComponent implements OnInit {
+export class SharedTableComponent implements OnInit ,OnChanges{
   @Input() data: any[] = [];  // Table data (rows)
   @Input() columns: any[] = [];  // Columns configuration
   @Input() showFilters: boolean = true;  // Show/Hide filters
@@ -21,6 +22,13 @@ export class SharedTableComponent implements OnInit {
   searchTerm: string = '';
   filteredData: any[] = [];
 
+  constructor(private cdr: ChangeDetectorRef) { }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['data']) {
+      this.filteredData = this.data;  // Update filtered data when data changes
+    }
+  }
+
   ngOnInit() {
     this.filteredData = this.data;
   }
@@ -28,6 +36,7 @@ export class SharedTableComponent implements OnInit {
   onSearchChange(event: any) {
     const searchTerm = event.target.value.toLowerCase();
     this.searchTermChange.emit(searchTerm);
+    console.log('searchTerm');
     
     this.filteredData = this.data.filter(row => {
       return Object.values(row).some(value => {
@@ -50,4 +59,6 @@ export class SharedTableComponent implements OnInit {
   onSelectInfo(event: any) {
     this.selectInfoChange.emit(event.target.checked);
   }
+
+
 }

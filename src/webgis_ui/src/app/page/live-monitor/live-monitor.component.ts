@@ -1,21 +1,28 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GeoserverDataService } from '../../../services/geoserver/geoserver-data.service';
 import { MapComponent } from '../../_shared/map/map.component';
 import { environment } from '../../../environments/environment.dev';
 import { GeoJSONSource } from 'maplibre-gl';
 import { SharedService } from '../../_shared/services/shared.service';
+import { ActionCableService } from '../../../services/sensors/actioncable.service';
 
 @Component({
   selector: 'app-live-monitor',
   templateUrl: './live-monitor.component.html',
   styleUrl: './live-monitor.component.scss'
 })
-export class LiveMonitorComponent implements AfterViewInit {
+export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
   isLoading: boolean = true; // Initially set to true to show the loading spinner
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
-  constructor(private GeoDataService: GeoserverDataService, private _sharedService: SharedService) { }
+  constructor(private GeoDataService: GeoserverDataService, private _sharedService: SharedService, private actionCableService:ActionCableService) { }
+  ngOnInit(): void {
+    this.actionCableService.subscribeToChannel('SensorDataChannel', null , (data: any) => {
+      // console.log('Received:', data); // Handle incoming real-time data here
+    });
+  }
   ngAfterViewInit(): void {
+    this.mapComponent.addCustomImages();
     this.addRasterOnMap();
 
     this.mapComponent.map.once('load', () => {
@@ -23,13 +30,14 @@ export class LiveMonitorComponent implements AfterViewInit {
     })
   }
 
+  //#region Add POI on Maps 
   addPOILayer(): void {
     const layerId = 'poi_marker'
     this.GeoDataService.getFeatures('sensors').subscribe(res => {
       console.log(res);
 
       // // Add a new GeoJSON source with clustering enabled
-      this.mapComponent.map.addSource(layerId, {
+      this.mapComponent.map.addSource(layerId, { 
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
@@ -127,8 +135,15 @@ export class LiveMonitorComponent implements AfterViewInit {
 
         if (name) {
           // console.log(name);
+          this.isLoading =true;
           this._sharedService.setIsSensorDetails(true,name);
+          setTimeout(() => {
+            // Code to execute after the delay
+            this.isLoading =false;
+          }, 200); 
+          
         }
+
       });
 
       // // Change the cursor to a pointer when over clusters or unclustered points
@@ -147,6 +162,7 @@ export class LiveMonitorComponent implements AfterViewInit {
       // });
     });
   }
+  //#endregion
 
   //#region  Raster && Road 
   addRasterOnMap(): void {
@@ -235,4 +251,9 @@ export class LiveMonitorComponent implements AfterViewInit {
     })
   }
   //#endregion
+
+
+  ngOnDestroy(): void {
+    this.actionCableService.unsubscribeFromChannel('SensorDataChannel');
+  }
 }

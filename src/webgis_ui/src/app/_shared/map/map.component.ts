@@ -17,11 +17,9 @@ export class MapComponent implements OnInit, OnDestroy {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-
     this.initializeMap();
     this.setMapHeight();
     this.addCustomImages();
-
   }
 
   @HostListener('window:resize', ['$event'])

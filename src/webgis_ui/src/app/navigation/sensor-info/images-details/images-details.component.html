@@ -1,22 +1,27 @@
 <!-- <br> -->
-  <!-- Image Gallery -->
-  <div class="image-gallery">
-    <h5>ภาพถ่ายที่บันทึก</h5>
-    <p>Latest: 2024-06-01 12:00</p>
-    <img src="assets/img/basic.jpg" alt="latest image" />
+<!-- Image Gallery -->
+<div class="image-gallery">
+  <h5>ภาพถ่ายที่บันทึก</h5>
+  <p>Latest: 2024-06-01 12:00</p>
+  <div *ngIf="fisrtUrl">
+    <img  [src]="fisrtUrl" alt="latest image" />
+  </div>
+  
 
-    <div class="previous-images">
+  <div *ngIf="imgArr.length > 0">
+    <div class="previous-images" *ngFor="let img of imgArr">
       <div class="image-item">
-        <img src="assets/img/mt.jpeg" alt="2024-06-01 10:00" />
+        <img [src]="img" alt="2024-06-01 10:00" />
         <span>By: S001.A</span>
       </div>
-      <div class="image-item">
-        <img src="assets/img/mt.jpeg" alt="2024-05-31 22:00" />
-        <span>By: S001.B</span>
-      </div>
-      <div class="image-item">
-        <img src="assets/img/mt.jpeg" alt="2024-05-31 22:00" />
-        <span>By: S001.B</span>
-      </div>
+      <!-- <div class="image-item" >
+          <img [src]="imgArr[2]" alt="2024-05-31 22:00" />
+          <span>By: S001.B</span>
+        </div>
+        <div class="image-item">
+          <img [src]="imgArr[3]" alt="2024-05-31 22:00" />
+          <span>By: S001.B</span>
+        </div> -->
     </div>
   </div>
+</div>

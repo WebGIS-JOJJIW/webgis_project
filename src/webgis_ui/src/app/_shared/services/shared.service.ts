@@ -16,4 +16,5 @@ export class SharedService {
   resetIsSensorDetails(){
     this.isSensorDetails.next(['', false]);
   }
+  
 }

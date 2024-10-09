@@ -1,20 +1,22 @@
 <div class="header">
   ข้อมูลเซนเซอร์
-  <button *ngIf="isSensorDetails" class="close-button" (click)="onClose()">×</button>
+  <button *ngIf="isSensorDetails" class="close-button" (click)="onClose()">
+    ×
+  </button>
 </div>
 <div class="sensor-container" *ngIf="isSensorDetails">
   <div class="row mb-2">
-    <app-header [name]="sensorName"></app-header>
+    <app-header [name]="sensorName" [detect]="lastestSensor.detect"></app-header>
   </div>
   <div class="row bordered-row">
-    <app-images-details></app-images-details>
+    <app-images-details [imgArr]="lastestSensor.img.slice(1)" [fisrtUrl]="lastestSensor.img[0]"></app-images-details>
   </div>
   <div class="row">
     <app-footer></app-footer>
   </div>
 </div>
 
-<div class="sensor-card" *ngIf="!isSensorDetails">
+<!-- <div class="sensor-card" *ngIf="!isSensorDetails">
   <div class="sensor-header">
     <strong>Sensor 001</strong>
     <span class="latest-time">Latest: 2024-10-08 12:01:00</span>
@@ -44,4 +46,60 @@
       </div>
     </div>
   </div>
+</div> -->
+
+<div *ngFor="let item of data">
+  <div class="sensor-card" *ngIf="!isSensorDetails">
+    <div class="sensor-header">
+      <strong>{{ item.name }}</strong>
+      <span class="latest-time">Latest: {{ item.date }}</span>
+    </div>
+
+    <div class="sensor-content">
+      <div class="sensor-data">
+        <span class="category">Human:</span> <span class="count">{{item.detect['HUMAN']}}</span>
+        <div class="sensor-images">
+          <div *ngFor="let img of item.img">
+            <img [src]="img" (click)="openImageModal(img)" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <div class="sensor-data">
+        <span class="category">Vehicle:</span> <span class="count">{{item.detect['VEHICLE']}}</span>
+        <!-- <div class="sensor-images">
+          <img src="assets/img/mt.jpeg" alt="Vehicle" />
+        </div> -->
+      </div>
+
+      <div class="sensor-data">
+        <span class="category">Other:</span>
+        <span class="count">{{item.detect['OTHERS']}} <em></em></span>
+        <!-- <div class="sensor-images">
+          <img src="assets/img/mt.jpeg" alt="Other" />
+        </div> -->
+      </div>
+      <div class="sensor-data">
+        <span class="count">1</span
+        ><span class="category">เหตุการณ์ใน 1 ชั่วโมง</span>
+      </div>
+    </div>
+    
+  </div>
 </div>
+
+
+<!-- Conditionally display the modal when an image is clicked -->
+<ng-container *ngIf="selectedImageUrl">
+  <ng-container *ngTemplateOutlet="imageModal; context: { image: selectedImageUrl }"></ng-container>
+</ng-container>
+
+<!-- Define the ng-template for the modal -->
+<ng-template #imageModal let-image="image">
+  <div class="modal" *ngIf="image">
+    <div class="modal-content">
+      <span class="close" (click)="closeImageModal()">&times;</span>
+      <img [src]="image" alt="Full Image" />
+    </div>
+  </div>
+</ng-template>
