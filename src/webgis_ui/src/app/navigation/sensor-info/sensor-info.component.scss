@@ -61,7 +61,11 @@ strong{
 }
 
 .sensor-data {
-  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap; /* Allow content to wrap if necessary */
+  align-items: center;
+  gap: 3px; /* Add space between items */
+  margin-bottom: 8px;
 }
 
 .sensor-data .category {
@@ -72,13 +76,12 @@ strong{
 
 .sensor-data .count {
   color: #26ff94; /* Light green */
-  padding-right: 10px;
+  padding-right: 3px;
 }
 
 .sensor-images {
   display: flex;
   gap: 5px;
-  flex-wrap: wrap;
 }
 
 .sensor-images img {

@@ -56,17 +56,21 @@
     </div>
 
     <div class="sensor-content">
-      <div class="sensor-data">
-        <span class="category">Human:</span> <span class="count">{{item.detect['HUMAN']}}</span>
-        <span class="category">Vehicle:</span> <span class="count">{{item.detect['VEHICLE']}}</span>
-        <span class="category">Other:</span>
-        <span class="count">{{item.detect['OTHERS']}} <em></em></span>
-        <div class="sensor-images">
-          <div *ngFor="let img of item.img">
-            <img [src]="img" (click)="openImageModal(img)" alt="" />
-          </div>
+      <div class="sensor-data" >
+        <div *ngFor="let entry of item.detect | keyvalue">
+          <span class="category">{{ entry.key }}:</span>
+          <span class="count">{{ entry.value }}</span>
         </div>
+        <!-- <span class="category">Vehicle:</span> <span class="count">{{item.detect['VEHICLE']}}</span> -->
+        <!-- <span class="category">Other:</span>
+        <span class="count">{{item.detect['OTHERS']}} <em></em></span> -->
+        
       </div>
+      <div class="sensor-data"><div class="sensor-images">
+        <div *ngFor="let img of item.img">
+          <img [src]="img" (click)="openImageModal(img)" alt="" />
+        </div>
+      </div></div>
       <div class="sensor-data">
         <span class="count">1</span
         ><span class="category">เหตุการณ์ใน 1 ชั่วโมง</span>

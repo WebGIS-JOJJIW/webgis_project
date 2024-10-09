@@ -95,18 +95,26 @@ export class LayoutComponent implements OnInit {
     
     let type: { [key: string]: number } = {};
     if (!environment.typeImg.some((type) => data.value.endsWith(type))) {
-      type['HUMAN'] = 0; type['VEHICLE'] = 0; type['OTHERS'] = 0;
-      data.value.split(' ').forEach((entry: { split: (arg0: string) => [any, any]; }) => {
+
+      data.value.split(' ').forEach((entry:any) => {
         const [count, label] = entry.split('-');
-        const upperLabel = label.toUpperCase().replace(',',''); // Convert the label to uppercase for consistency
-        if (_SharedModule.vehicle_type.some((type) => upperLabel === type)) {
-          type['VEHICLE'] += parseInt(count, 10);
-        } else if (upperLabel === 'HUMAN') {
-          type[upperLabel] = parseInt(count, 10);
-        } else {
-          type["OTHERS"] += parseInt(count, 10);
-        }
+        type[(label+'').replace(',','')] = parseInt(count, 10); // 'H' for human, 'C' for car
       });
+      // type['HUMAN'] = 0; type['VEHICLE'] = 0; type['OTHERS'] = 0;
+      // data.value.split(' ').forEach((entry: { split: (arg0: string) => [any, any]; }) => {
+      //   const [count, label] = entry.split('-');
+      //   const replaceLabel = label.replace(',',''); // Convert the label to uppercase for consistency
+      //   type[label] == parseInt(count, 10);
+      //   console.log(count,label);
+        
+      //   // if (_SharedModule.vehicle_type.some((type) => upperLabel === type)) {
+      //   //   type['VEHICLE'] += parseInt(count, 10);
+      //   // } else if (upperLabel === 'HUMAN') {
+      //   //   type[upperLabel] = parseInt(count, 10);
+      //   // } else {
+      //   //   type["OTHERS"] += parseInt(count, 10);
+      //   // }
+      // });
     }
     return type;
   }
