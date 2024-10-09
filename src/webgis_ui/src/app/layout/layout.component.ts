@@ -36,7 +36,26 @@ export class LayoutComponent implements OnInit {
         event_id: data.event_id,
         detect: {}
       }
-      this.eventsData = [...[newSensor]]
+      this.eventsData = [...this.eventsData, newSensor].sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
+
+      this.eventFilter = this.eventsData.filter((x: any) => {
+        // Exclude events where 'details' ends with any of the image types
+        return !environment.typeImg.some((type) => x.details.endsWith(type));
+      });
+  
+      const eventImage = this.eventsData.filter((x: any) => {
+        // Exclude events where 'details' ends with any of the image types
+        return environment.typeImg.some((type) => x.details.endsWith(type));
+      });
+  
+      this.eventFilter.forEach((ele: any) => {
+        ele.img = eventImage
+          .filter((x: any) => x.event_id === ele.event_id)  // Filter based on event_id
+          .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`);  // Extract imgValue from each filtered object
+  
+      });
     });
 
     this.sensorDataService.getAllSensorEvents().subscribe(res => {
