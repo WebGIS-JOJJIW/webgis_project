@@ -9,7 +9,7 @@
     <app-header [name]="sensorName" [detect]="lastestSensor.detect"></app-header>
   </div>
   <div class="row bordered-row">
-    <app-images-details [imgArr]="lastestSensor.img.slice(1)" [fisrtUrl]="lastestSensor.img[0]"></app-images-details>
+    <app-images-details [imgArr]="mergedImages.slice(1)" [fisrtUrl]="mergedImages[0]"></app-images-details>
   </div>
   <div class="row">
     <app-footer></app-footer>
@@ -58,26 +58,14 @@
     <div class="sensor-content">
       <div class="sensor-data">
         <span class="category">Human:</span> <span class="count">{{item.detect['HUMAN']}}</span>
+        <span class="category">Vehicle:</span> <span class="count">{{item.detect['VEHICLE']}}</span>
+        <span class="category">Other:</span>
+        <span class="count">{{item.detect['OTHERS']}} <em></em></span>
         <div class="sensor-images">
           <div *ngFor="let img of item.img">
             <img [src]="img" (click)="openImageModal(img)" alt="" />
           </div>
         </div>
-      </div>
-
-      <div class="sensor-data">
-        <span class="category">Vehicle:</span> <span class="count">{{item.detect['VEHICLE']}}</span>
-        <!-- <div class="sensor-images">
-          <img src="assets/img/mt.jpeg" alt="Vehicle" />
-        </div> -->
-      </div>
-
-      <div class="sensor-data">
-        <span class="category">Other:</span>
-        <span class="count">{{item.detect['OTHERS']}} <em></em></span>
-        <!-- <div class="sensor-images">
-          <img src="assets/img/mt.jpeg" alt="Other" />
-        </div> -->
       </div>
       <div class="sensor-data">
         <span class="count">1</span

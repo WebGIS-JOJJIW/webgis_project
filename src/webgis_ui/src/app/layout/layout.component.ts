@@ -34,28 +34,14 @@ export class LayoutComponent implements OnInit {
         name: data.sensor_name.toUpperCase(),
         img: [''],
         event_id: data.event_id,
-        detect: {}
+        detect: this.detectType(data)
       }
+
       this.eventsData = [...this.eventsData, newSensor].sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
 
-      this.eventFilter = this.eventsData.filter((x: any) => {
-        // Exclude events where 'details' ends with any of the image types
-        return !environment.typeImg.some((type) => x.details.endsWith(type));
-      });
-  
-      const eventImage = this.eventsData.filter((x: any) => {
-        // Exclude events where 'details' ends with any of the image types
-        return environment.typeImg.some((type) => x.details.endsWith(type));
-      });
-  
-      this.eventFilter.forEach((ele: any) => {
-        ele.img = eventImage
-          .filter((x: any) => x.event_id === ele.event_id)  // Filter based on event_id
-          .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`);  // Extract imgValue from each filtered object
-  
-      });
+      this.filterSensorData();
     });
 
     this.sensorDataService.getAllSensorEvents().subscribe(res => {
@@ -67,24 +53,6 @@ export class LayoutComponent implements OnInit {
 
   updateEventsData(data: any[]): void {
     this.eventsData = data.map((item: any) => {
-      // Split the value string and count occurrences
-      let type: { [key: string]: number } = {};
-      if (!environment.typeImg.some((type) => item.value.endsWith(type))) {
-        type['HUMAN'] = 0; type['VEHICLE'] = 0; type['OTHERS'] = 0;
-        item.value.split(' ').forEach((entry: { split: (arg0: string) => [any, any]; }) => {
-          const [count, label] = entry.split('-');
-          const upperLabel = label.toUpperCase().replace(',',''); // Convert the label to uppercase for consistency
-          
-          if (_SharedModule.vehicle_type.some((type) => upperLabel === type)) {
-            type['VEHICLE'] += parseInt(count, 10);
-          } else if (upperLabel === 'HUMAN') {
-            type[upperLabel] = parseInt(count, 10);
-          } else {
-            type["OTHERS"] += parseInt(count, 10);
-          }
-        });
-      }
-
       return {
         date: _SharedModule.formatDateTimeLocal(item.dt),
         type: 'Alarm',
@@ -92,11 +60,18 @@ export class LayoutComponent implements OnInit {
         details: `${item.sensor_name.toUpperCase()} -  ${item.value}`,
         name: item.sensor_name.toUpperCase(),
         imgValue: item.value,
-        detect: type,
+        detect:  this.detectType(item),
         img: [''],
         event_id: item.event_id
       };
     });
+   
+    this.filterSensorData();
+    // console.log(this.eventFilter);
+
+  }
+
+  filterSensorData(){
     this.eventFilter = this.eventsData.filter((x: any) => {
       // Exclude events where 'details' ends with any of the image types
       return !environment.typeImg.some((type) => x.details.endsWith(type));
@@ -113,8 +88,27 @@ export class LayoutComponent implements OnInit {
         .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`);  // Extract imgValue from each filtered object
 
     });
-    // console.log(this.eventFilter);
+  }
 
+  detectType(data : any): { [key: string]: number } {
+    // console.log(data);
+    
+    let type: { [key: string]: number } = {};
+    if (!environment.typeImg.some((type) => data.value.endsWith(type))) {
+      type['HUMAN'] = 0; type['VEHICLE'] = 0; type['OTHERS'] = 0;
+      data.value.split(' ').forEach((entry: { split: (arg0: string) => [any, any]; }) => {
+        const [count, label] = entry.split('-');
+        const upperLabel = label.toUpperCase().replace(',',''); // Convert the label to uppercase for consistency
+        if (_SharedModule.vehicle_type.some((type) => upperLabel === type)) {
+          type['VEHICLE'] += parseInt(count, 10);
+        } else if (upperLabel === 'HUMAN') {
+          type[upperLabel] = parseInt(count, 10);
+        } else {
+          type["OTHERS"] += parseInt(count, 10);
+        }
+      });
+    }
+    return type;
   }
 
   onSearch(term: string) {

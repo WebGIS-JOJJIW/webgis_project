@@ -5,7 +5,7 @@
   color: white;
   // width: 300px;
   height: 96%;
-  overflow-y: scroll;
+  // overflow-y: scroll;
 }
 
 span {
@@ -72,12 +72,13 @@ strong{
 
 .sensor-data .count {
   color: #26ff94; /* Light green */
-  padding-right: 5px;
+  padding-right: 10px;
 }
 
 .sensor-images {
   display: flex;
   gap: 5px;
+  flex-wrap: wrap;
 }
 
 .sensor-images img {

@@ -13,6 +13,7 @@ export class SensorInfoComponent implements OnInit {
   isSensorDetails: boolean = false;
   sensorName: string = ''
   lastestSensor: any;
+  mergedImages = [];
 
   constructor(private _sharedService: SharedService) { }
   ngOnInit(): void {
@@ -23,7 +24,7 @@ export class SensorInfoComponent implements OnInit {
     this._sharedService.currentIsSensorDetails.subscribe(res => {
       this.isSensorDetails = res[1];
       if (this.isSensorDetails) {
-        this.initialDataSensor();
+        
         this.sensorName = res[0];
 
         this.lastestSensor = this.data
@@ -31,8 +32,20 @@ export class SensorInfoComponent implements OnInit {
           .reduce((latest: any, current: any) => {
             return new Date(current.date) > new Date(latest.date) ? current : latest;
           });
-          
 
+          const imgArray = this.data
+          .filter((x: any) => 
+            x.name.toUpperCase() === this.sensorName.toUpperCase() &&  // Filter by sensor name
+            x.img && x.img.length > 0)  // Check if img exists and is not empty
+          .map((x: any) => x.img);  // Extract the image field
+        
+          this.mergedImages = (imgArray.flat()).slice(0,4);
+          // this.lastestSensor.img = mergedImages.slice(0,5)
+        // console.log('Latest sensor data:', this.latestSensor);
+        console.log('Images for sensor:', this.lastestSensor);
+        
+        
+          
       } else {
         this.initialDataSensorAll();
         this.sensorName = '';
