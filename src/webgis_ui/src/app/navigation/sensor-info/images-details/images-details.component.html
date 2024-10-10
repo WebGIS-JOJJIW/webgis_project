@@ -1,6 +1,6 @@
 <!-- <br> -->
 <!-- Image Gallery -->
-<div class="image-gallery">
+<!-- <div class="image-gallery">
   <h5>ภาพถ่ายที่บันทึก</h5>
   <p>Latest: 2024-06-01 12:00</p>
   <div *ngIf="fisrtUrl">
@@ -14,14 +14,57 @@
         <img [src]="img" alt="2024-06-01 10:00" />
         <span>By: S001.A</span>
       </div>
-      <!-- <div class="image-item" >
+      <div class="image-item" >
           <img [src]="imgArr[2]" alt="2024-05-31 22:00" />
           <span>By: S001.B</span>
         </div>
         <div class="image-item">
           <img [src]="imgArr[3]" alt="2024-05-31 22:00" />
           <span>By: S001.B</span>
-        </div> -->
+        </div>
+    </div>
+  </div>
+</div> -->
+
+<div *ngFor="let item of data">
+  <div class="sensor-card" >
+    <div class="sensor-header">
+      <span class="latest-time">Latest: {{ item.date }}</span>
+    </div>
+
+    <div class="sensor-content">
+      <div class="sensor-data" >
+        <div *ngFor="let entry of item.detect | keyvalue">
+          <span class="category">{{ entry.key }}:</span>
+          <span class="count">{{ entry.value }}</span>
+        </div>
+        
+      </div>
+      <div class="sensor-data"><div class="sensor-images">
+        <div *ngFor="let img of item.img">
+          <img [src]="img" (click)="openImageModal(img)" alt="" />
+        </div>
+      </div></div>
+      <div class="sensor-data">
+        <span class="count">{{item.recentEventCount}}</span
+          ><span class="category">เหตุการณ์ใน 1 ชั่วโมง</span>
+      </div>
     </div>
   </div>
 </div>
+
+
+<!-- Conditionally display the modal when an image is clicked -->
+<ng-container *ngIf="selectedImageUrl">
+  <ng-container *ngTemplateOutlet="imageModal; context: { image: selectedImageUrl }"></ng-container>
+</ng-container>
+
+<!-- Define the ng-template for the modal -->
+<ng-template #imageModal let-image="image">
+  <div class="modal" *ngIf="image">
+    <div class="modal-content">
+      <span class="close" (click)="closeImageModal()">&times;</span>
+      <img [src]="image" alt="Full Image" />
+    </div>
+  </div>
+</ng-template>

@@ -3,6 +3,7 @@ import { ActionCableService } from '../../services/sensors/actioncable.service';
 import { SensorDataService } from '../../services/sensors/sensor-data.service';
 import { environment } from '../../environments/environment.dev';
 import { _SharedModule } from '../_shared/_shared.module';
+import { SensorInfo } from '../../models/sensorInfo.model';
 
 @Component({
   selector: 'app-layout',
@@ -10,8 +11,10 @@ import { _SharedModule } from '../_shared/_shared.module';
   styleUrl: './layout.component.scss'
 })
 export class LayoutComponent implements OnInit {
-  eventsData: any;
+  isLoading = false;
+  eventsData!: SensorInfo[];
   eventFilter: any;
+  eventFlterAll!: SensorInfo[];
   columnsConfig = [
     { header: 'วันที่', field: 'date' },
     { header: 'ประเภท', field: 'type' },
@@ -25,7 +28,7 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.actionCableService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
-      const newSensor = {
+      const newSensor = new SensorInfo({
         date: _SharedModule.formatDateTimeLocal(data.dt),
         type: 'Alarm',
         system: 'SENSOR',
@@ -34,8 +37,9 @@ export class LayoutComponent implements OnInit {
         name: data.sensor_name.toUpperCase(),
         img: [''],
         event_id: data.event_id,
-        detect: this.detectType(data)
-      }
+        detect: this.detectType(data),
+        recentEventCount: 0,
+      })
 
       this.eventsData = [...this.eventsData, newSensor].sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -60,61 +64,93 @@ export class LayoutComponent implements OnInit {
         details: `${item.sensor_name.toUpperCase()} -  ${item.value}`,
         name: item.sensor_name.toUpperCase(),
         imgValue: item.value,
-        detect:  this.detectType(item),
+        detect: this.detectType(item),
         img: [''],
-        event_id: item.event_id
+        event_id: item.event_id,
+        recentEventCount: 0
       };
     });
-   
+
     this.filterSensorData();
     // console.log(this.eventFilter);
-
   }
 
-  filterSensorData(){
+  filterSensorData() {
     this.eventFilter = this.eventsData.filter((x: any) => {
       // Exclude events where 'details' ends with any of the image types
       return !environment.typeImg.some((type) => x.details.endsWith(type));
     });
 
+    this.eventFlterAll = this.eventFilter;
     const eventImage = this.eventsData.filter((x: any) => {
       // Exclude events where 'details' ends with any of the image types
       return environment.typeImg.some((type) => x.details.endsWith(type));
     });
 
+
+    // Create a Set to store unique sensor IDs
+    const uniqueSensors = new Set();
+
+    this.eventFilter = this.eventFilter.filter((ele: any) => {
+      // Check if the sensor is already in the Set based on a unique property, like sensor_id
+      if (!uniqueSensors.has(ele.sensor_id)) {
+        // Add the sensor_id to the Set if it's unique
+        uniqueSensors.add(ele.sensor_id);
+        return true;  // Keep the element in the filtered array
+      }
+      return false;  // Remove the element from the filtered array if sensor_id is not unique
+    });
+
+    // After filtering unique sensors, you can still process the images
     this.eventFilter.forEach((ele: any) => {
+
+      const date = new Date(ele.date); // Convert string date to Date object
+      const oneHourAgo = new Date(date.getTime() - 60 * 60 * 1000); // Subtract one hour
       ele.img = eventImage
         .filter((x: any) => x.event_id === ele.event_id)  // Filter based on event_id
         .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`);  // Extract imgValue from each filtered object
 
+      const recentEventCount = eventImage
+        .filter((x: any) => x.event_id === ele.event_id && new Date(x.event_time) > oneHourAgo) // Filter by event_id and time
+        .length; // Get the count of filtered events
+
+      // You can store the count in the ele object if needed
+      ele.recentEventCount = recentEventCount; // Add the count to the element
     });
+
+    this.eventFlterAll.forEach(ele => {
+      // Assuming ele.event_time is the timestamp of the event
+      const date = new Date(ele.date); // Convert string date to Date object
+      const oneHourAgo = new Date(date.getTime() - 60 * 60 * 1000); // Subtract one hour
+
+      ele.img = eventImage
+        .filter((x: any) => x.event_id === ele.event_id) // Filter based on event_id
+        .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`); // Extract imgValue from each filtered object
+
+      // Count events that occurred within the last hour
+      const recentEventCount = this.eventsData
+        .filter(x => new Date(x.date) > oneHourAgo) // Filter by event_id and time
+        .length; // Get the count of filtered events
+
+      // You can store the count in the ele object if needed
+      ele.recentEventCount = recentEventCount; // Add the count to the element
+    });
+
+
+    console.log('this.eventFlterAll', this.eventFlterAll);
+
   }
 
-  detectType(data : any): { [key: string]: number } {
+  detectType(data: any): { [key: string]: number } {
     // console.log(data);
-    
+
     let type: { [key: string]: number } = {};
     if (!environment.typeImg.some((type) => data.value.endsWith(type))) {
 
-      data.value.split(' ').forEach((entry:any) => {
+      data.value.split(' ').forEach((entry: any) => {
         const [count, label] = entry.split('-');
-        type[(label+'').replace(',','')] = parseInt(count, 10); // 'H' for human, 'C' for car
+        type[(label + '').replace(',', '')] = parseInt(count, 10); // 'H' for human, 'C' for car
       });
-      // type['HUMAN'] = 0; type['VEHICLE'] = 0; type['OTHERS'] = 0;
-      // data.value.split(' ').forEach((entry: { split: (arg0: string) => [any, any]; }) => {
-      //   const [count, label] = entry.split('-');
-      //   const replaceLabel = label.replace(',',''); // Convert the label to uppercase for consistency
-      //   type[label] == parseInt(count, 10);
-      //   console.log(count,label);
-        
-      //   // if (_SharedModule.vehicle_type.some((type) => upperLabel === type)) {
-      //   //   type['VEHICLE'] += parseInt(count, 10);
-      //   // } else if (upperLabel === 'HUMAN') {
-      //   //   type[upperLabel] = parseInt(count, 10);
-      //   // } else {
-      //   //   type["OTHERS"] += parseInt(count, 10);
-      //   // }
-      // });
     }
     return type;
   }

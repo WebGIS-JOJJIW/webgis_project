@@ -17,4 +17,14 @@ export class SharedService {
     this.isSensorDetails.next(['', false]);
   }
   
+
+  //IsLoading for loading page show 
+  private isLoading = new BehaviorSubject<boolean>(false);
+  currentIsLoading = this.isLoading.asObservable();
+  setIsLoading(res:boolean){
+    this.isLoading.next(res);
+  }
+  resetIsLoading(){
+    this.isLoading.next(false);
+  }
 }

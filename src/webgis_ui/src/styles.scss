@@ -172,3 +172,113 @@ input {
 }
 
 
+.sensor-container {
+  background-color: #1e2a34;
+  padding: 20px 40px;
+  // border-radius: 10px;
+  color: white;
+  // width: 300px;
+  // height: 96%;
+  // overflow-y: scroll;
+}
+
+span {
+  color: #ccc;
+  font-size: 0.85em;
+}
+
+.bordered-row {
+  border-top: 2px solid #1e2124; /* Black border at the top */
+  border-bottom: 2px solid #1e2124; /* Black border at the bottom */
+  padding: 0 0 10px /* Optional: Add some padding */
+}
+
+strong{
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sensor-card {
+
+  background-color: #1e2a34;
+  padding: 10px 30px;
+  // border-radius: 10px;
+  color: white;
+  // width: 300px;
+  border-bottom: 1px solid #475a59;
+  height: 100%;
+  overflow-y: scroll;
+
+}
+
+.sensor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // border-bottom: 1px solid #3b4d59;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.sensor-header strong {
+  color: #fff; /* Light purple */
+  font-size: 1rem;
+}
+
+.sensor-header .latest-time {
+  color: #9eb1c2;
+  font-size: 0.9rem;
+}
+
+.sensor-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.sensor-data {
+  display: flex;
+  flex-wrap: wrap; /* Allow content to wrap if necessary */
+  align-items: center;
+  gap: 3px; /* Add space between items */
+  margin-bottom: 8px;
+}
+
+.sensor-data .category {
+  font-weight: 500;
+  color: #ddd;
+  padding-right: 5px;
+}
+
+.sensor-data .count {
+  color: #26ff94; /* Light green */
+  padding-right: 3px;
+}
+
+.sensor-images {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap */
+  gap: 5px; /* Space between images */
+  max-width: 100%; /* Prevent it from exceeding the parent width */
+  overflow: hidden; /* Hide overflow if necessary */
+}
+
+.sensor-images img {
+  cursor: pointer;
+  // width: 100px; /* Set a fixed width for images */
+  height: auto; /* Maintain aspect ratio */
+  max-height: 100px; /* Limit height if needed */
+  border-radius: 3px;
+}
+
+.sensor-data em {
+  font-style: italic;
+  color: #26ff94;
+}
+
+
+
+
+
+
+
+

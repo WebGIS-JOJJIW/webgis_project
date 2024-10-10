@@ -1,3 +1,4 @@
+<app-loading [isLoading]="isLoading"></app-loading>
 <div class="container-fluid">
   <div class="row align-items-start">
     <app-top-bar></app-top-bar>
@@ -29,7 +30,7 @@
       </div>
     </div>
     <div class="col-3 sensor-detect" >
-      <app-sensor-info [data]="eventFilter"></app-sensor-info>
+      <app-sensor-info [data]="eventFilter" [dataAll]="eventFlterAll"></app-sensor-info>
     </div>
   </div>
 </div>

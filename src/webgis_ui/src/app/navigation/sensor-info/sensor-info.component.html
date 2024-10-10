@@ -9,49 +9,17 @@
     <app-header [name]="sensorName" [detect]="lastestSensor.detect"></app-header>
   </div>
   <div class="row bordered-row">
-    <app-images-details [imgArr]="mergedImages.slice(1)" [fisrtUrl]="mergedImages[0]"></app-images-details>
+    <app-images-details [data]="sensorFilterName"></app-images-details>
   </div>
   <div class="row">
     <app-footer></app-footer>
   </div>
 </div>
 
-<!-- <div class="sensor-card" *ngIf="!isSensorDetails">
-  <div class="sensor-header">
-    <strong>Sensor 001</strong>
-    <span class="latest-time">Latest: 2024-10-08 12:01:00</span>
-  </div>
-
-  <div class="sensor-content">
-    <div class="sensor-data">
-      <span class="category">Human:</span> <span class="count">2</span>
-      <div class="sensor-images">
-        <img src="assets/img/mt.jpeg" alt="Human 1" />
-        <img src="assets/img/mt.jpeg" alt="Human 2" />
-      </div>
-    </div>
-
-    <div class="sensor-data">
-      <span class="category">Vehicle:</span> <span class="count">1</span>
-      <div class="sensor-images">
-        <img src="assets/img/mt.jpeg" alt="Vehicle" />
-      </div>
-    </div>
-
-    <div class="sensor-data">
-      <span class="category">Other:</span>
-      <span class="count">1 <em>(Animal)</em></span>
-      <div class="sensor-images">
-        <img src="assets/img/mt.jpeg" alt="Other" />
-      </div>
-    </div>
-  </div>
-</div> -->
-
 <div *ngFor="let item of data">
   <div class="sensor-card" *ngIf="!isSensorDetails">
     <div class="sensor-header">
-      <strong>{{ item.name }}</strong>
+      <strong (click)="onClick(item.name)">{{ item.name }}</strong>
       <span class="latest-time">Latest: {{ item.date }}</span>
     </div>
 
@@ -72,7 +40,7 @@
         </div>
       </div></div>
       <div class="sensor-data">
-        <span class="count">1</span
+        <span class="count">{{item.recentEventCount}}</span
         ><span class="category">เหตุการณ์ใน 1 ชั่วโมง</span>
       </div>
     </div>

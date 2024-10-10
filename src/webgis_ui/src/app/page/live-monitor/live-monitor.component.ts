@@ -12,11 +12,12 @@ import { ActionCableService } from '../../../services/sensors/actioncable.servic
   styleUrl: './live-monitor.component.scss'
 })
 export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
-  isLoading: boolean = true; // Initially set to true to show the loading spinner
+  // isLoading: boolean = true; // Initially set to true to show the loading spinner
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   constructor(private GeoDataService: GeoserverDataService, private _sharedService: SharedService, private actionCableService:ActionCableService) { }
   ngOnInit(): void {
+    this._sharedService.setIsLoading(true);
     this.actionCableService.subscribeToChannel('SensorDataChannel', null , (data: any) => {
       // console.log('Received:', data); // Handle incoming real-time data here
     });
@@ -135,31 +136,16 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
 
         if (name) {
           // console.log(name);
-          this.isLoading =true;
+          this._sharedService.setIsLoading(true);
           this._sharedService.setIsSensorDetails(true,name);
           setTimeout(() => {
             // Code to execute after the delay
-            this.isLoading =false;
+            this._sharedService.setIsLoading(false);
           }, 200); 
           
         }
 
       });
-
-      // // Change the cursor to a pointer when over clusters or unclustered points
-      // this.mapComponent.map.on('mouseenter', `${layerId}-clusters`, () => {
-      //   this.mapComponent.map.getCanvas().style.cursor = 'pointer';
-      // });
-      // this.mapComponent.map.on('mouseenter', `${layerId}-unclustered`, () => {
-      //   this.mapComponent.map.getCanvas().style.cursor = 'pointer';
-      // });
-
-      // this.mapComponent.map.on('mouseleave', `${layerId}-clusters`, () => {
-      //   this.mapComponent.map.getCanvas().style.cursor = '';
-      // });
-      // this.mapComponent.map.on('mouseleave', `${layerId}-unclustered`, () => {
-      //   this.mapComponent.map.getCanvas().style.cursor = '';
-      // });
     });
   }
   //#endregion
@@ -193,7 +179,7 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
 
     setTimeout(() => {
       this.getRasterLayerBbox(name);
-      this.isLoading = false;
+      this._sharedService.setIsLoading(false);
     }, 1500);
   }
 
