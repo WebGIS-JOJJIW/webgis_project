@@ -158,7 +158,7 @@ input {
 ::-webkit-scrollbar-thumb {
   background-color: #888; /* สีของ scrollbar */
   border-radius: 10px; /* ความโค้งมน */
-  border: 3px solid #f1f1f1; /* เพิ่มขอบใน scrollbar */
+  border: 4px solid #1E2124; /* เพิ่มขอบใน scrollbar */
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -168,7 +168,7 @@ input {
 /* สำหรับ Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #888 #f1f1f1;
+  scrollbar-color: #475a59 #1e2a34;
 }
 
 

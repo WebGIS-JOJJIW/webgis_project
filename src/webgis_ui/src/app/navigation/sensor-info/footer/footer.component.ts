@@ -27,7 +27,7 @@ export class FooterComponent implements OnInit {
           label: '',
           data: dataForMonth,
           backgroundColor: '#00FCFF',
-          borderColor: '#00FCFF',
+          borderColor: '#1e2124',
           borderWidth: 1
         }]
       },

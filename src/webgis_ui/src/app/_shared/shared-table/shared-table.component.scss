@@ -1,5 +1,5 @@
 .event-table-container {
-    padding: 10px;
+    padding-top: 8px;
   
     .filters {
       display: flex;
@@ -21,11 +21,11 @@
         position: relative;
   
         input {
-          background-color: #465260;
+          background-color: #475a59;
           border: none;
-          color: white;
+          color: #fff;
           padding: 5px 10px;
-          border-radius: 5px;
+          border-radius: 3px;
         }
   
         .fa-search {
@@ -62,14 +62,14 @@
       thead {
         th {
           background-color: #0b2026;
-          color: white;
-          padding: 10px;
+          color: #fff;
+          padding: 4px;
           text-align: left;
           position: sticky;
           top: 0;
           z-index: 1;
           border-top: 1px solid #555; /* Only top border for the header */
-          border-bottom: 1px solid #555; /* Only bottom border for the header */
+          border-bottom: 1px solid #5c7978; /* Only bottom border for the header */
         }
       }
   
@@ -84,8 +84,8 @@
   
           td {
             padding: 5px;
-            border-top: 1px solid #555; /* Only top border between rows */
-            border-bottom: 1px solid #555; /* Only bottom border between rows */
+            border-top: 1px solid #475a59; /* Only top border between rows */
+            border-bottom: 1px solid #475a59; /* Only bottom border between rows */
             background-color: transparent;
             color: #fff;
           }
