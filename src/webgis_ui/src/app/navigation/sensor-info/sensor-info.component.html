@@ -1,12 +1,16 @@
-<div class="header">
+<div class="header"*ngIf="!isSensorDetails">
   ข้อมูลเซนเซอร์
-  <button *ngIf="isSensorDetails" class="close-button" (click)="onClose()">
+</div>
+
+<div class="header"*ngIf="isSensorDetails" >
+  ข้อมูลเซนเซอร์ ({{sensorName}})
+  <button class="close-button" (click)="onClose()">
     ×
   </button>
 </div>
 <div class="sensor-container" *ngIf="isSensorDetails">
   <div class="row mb-2">
-    <app-header [name]="sensorName" [detect]="lastestSensor.detect"></app-header>
+    <app-header [name]="sensorFilterName[0].recentEventCount+''" [detect]="lastestSensor.detect"></app-header>
   </div>
   <div class="row bordered-row">
     <app-images-details [data]="sensorFilterName"></app-images-details>

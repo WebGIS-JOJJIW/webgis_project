@@ -1,13 +1,17 @@
 <div class="sensor-header row">
-  <div class="col-3">
-    &nbsp;&nbsp;<button class="cam-button" disabled>CAM</button>
+  <div class="col-12 " style="display: flex; ">
+    &nbsp;&nbsp;<button class="cam-button" disabled>CAM</button>&nbsp;&nbsp;
+    <div class="sensor-data">
+      <span class="count">{{name}}</span
+      ><span class="category">เหตุการณ์ใน 1 ชั่วโมง</span>
+    </div>
   </div>
-  <div class="col-9"><h4 class="sensor-title">{{name}}</h4></div>
+  <!-- <div class="col-9"><h4 class="sensor-title">{{name}}</h4></div> -->
 </div>
 
 <!-- Event Information -->
 <div class="event-info">
-  <a>เหตุการณ์ (Last 12 hrs):</a>
+  <!-- <a>เหตุการณ์ (Last 12 hrs):</a> -->
   <div class="event-counters" >
     <span *ngFor="let item of detect|keyvalue">{{item.key}} <span class="count">{{item.value}}</span></span>
     <!-- <span>Vehicle: <span class="count">{{detect['VEHICLE']}}</span></span>

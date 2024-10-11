@@ -174,7 +174,7 @@ input {
 
 .sensor-container {
   background-color: #1e2a34;
-  padding: 20px 40px;
+  padding: 15px 20px 10px 20px;
   // border-radius: 10px;
   color: white;
   // width: 300px;
@@ -201,7 +201,7 @@ strong{
 .sensor-card {
 
   background-color: #1e2a34;
-  padding: 10px 30px;
+  padding: 5px 0px 5px 15px;
   // border-radius: 10px;
   color: white;
   // width: 300px;
@@ -216,8 +216,8 @@ strong{
   justify-content: space-between;
   align-items: center;
   // border-bottom: 1px solid #3b4d59;
-  padding-bottom: 5px;
-  margin-bottom: 10px;
+  // padding-bottom: 5px;
+  // margin-bottom: 10px;
 }
 
 .sensor-header strong {
@@ -239,8 +239,8 @@ strong{
   display: flex;
   flex-wrap: wrap; /* Allow content to wrap if necessary */
   align-items: center;
-  gap: 3px; /* Add space between items */
-  margin-bottom: 8px;
+  gap: 5px; /* Add space between items */
+  margin-bottom: 5px;
 }
 
 .sensor-data .category {
