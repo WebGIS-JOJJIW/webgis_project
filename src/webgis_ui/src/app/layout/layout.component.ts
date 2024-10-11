@@ -4,6 +4,7 @@ import { SensorDataService } from '../../services/sensors/sensor-data.service';
 import { environment } from '../../environments/environment.dev';
 import { _SharedModule } from '../_shared/_shared.module';
 import { SensorInfo } from '../../models/sensorInfo.model';
+import { SharedService } from '../_shared/services/shared.service';
 
 @Component({
   selector: 'app-layout',
@@ -23,7 +24,8 @@ export class LayoutComponent implements OnInit {
   ];
   constructor(private actionCableService: ActionCableService,
     private sensorDataService: SensorDataService,
-    private cdr: ChangeDetectorRef // Inject ChangeDetectorRef
+    private cdr: ChangeDetectorRef, // Inject ChangeDetectorRef
+    private _sharedSevice: SharedService
   ) { }
 
   ngOnInit(): void {
@@ -53,6 +55,8 @@ export class LayoutComponent implements OnInit {
       // Manually trigger change detection to update the view
       this.cdr.detectChanges();
     })
+
+    this._sharedSevice.currentIsLoading.subscribe(x=> this.isLoading = x);
   }
 
   updateEventsData(data: any[]): void {
