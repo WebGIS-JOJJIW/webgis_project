@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { SharedService } from '../../_shared/services/shared.service';
 import { SensorInfo } from '../../../models/sensorInfo.model';
@@ -8,7 +8,7 @@ import { SensorInfo } from '../../../models/sensorInfo.model';
   templateUrl: './sensor-info.component.html',
   styleUrl: './sensor-info.component.scss'
 })
-export class SensorInfoComponent implements OnInit {
+export class SensorInfoComponent implements OnInit ,OnChanges{
   @Input() data!: SensorInfo[]; // unique sensor name 
   @Input() dataAll! : SensorInfo[];// all sensor event  
   isSensorDetails: boolean = false;
@@ -18,6 +18,10 @@ export class SensorInfoComponent implements OnInit {
   mergedImages: any;
 
   constructor(private _sharedService: SharedService) { }
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes['data']);
+    
+  }
   ngOnInit(): void {
     // console.log(this.lastestSensor);
     this.initialSubscribe();

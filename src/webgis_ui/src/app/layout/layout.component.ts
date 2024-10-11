@@ -93,13 +93,15 @@ export class LayoutComponent implements OnInit {
 
     this.eventFilter = this.eventFilter.filter((ele: any) => {
       // Check if the sensor is already in the Set based on a unique property, like sensor_id
-      if (!uniqueSensors.has(ele.sensor_id)) {
+      if (!uniqueSensors.has(ele.name)) {
         // Add the sensor_id to the Set if it's unique
-        uniqueSensors.add(ele.sensor_id);
+        uniqueSensors.add(ele.name);
         return true;  // Keep the element in the filtered array
       }
       return false;  // Remove the element from the filtered array if sensor_id is not unique
     });
+    console.log(uniqueSensors);
+    
 
     // After filtering unique sensors, you can still process the images
     this.eventFilter.forEach((ele: any) => {
@@ -129,7 +131,7 @@ export class LayoutComponent implements OnInit {
 
       // Count events that occurred within the last hour
       const recentEventCount = this.eventsData
-        .filter(x => new Date(x.date) > oneHourAgo) // Filter by event_id and time
+        .filter(x => new Date(x.date) > oneHourAgo && x.name === ele.name) // Filter by event_id and time
         .length; // Get the count of filtered events
 
       // You can store the count in the ele object if needed
@@ -137,7 +139,7 @@ export class LayoutComponent implements OnInit {
     });
 
 
-    console.log('this.eventFlterAll', this.eventFlterAll);
+    console.log('this.eventFilter', this.eventFilter);
 
   }
 
