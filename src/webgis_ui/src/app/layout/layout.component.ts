@@ -104,7 +104,7 @@ export class LayoutComponent implements OnInit {
       }
       return false;  // Remove the element from the filtered array if sensor_id is not unique
     });
-    console.log(uniqueSensors);
+    // console.log(uniqueSensors);
     
 
     // After filtering unique sensors, you can still process the images

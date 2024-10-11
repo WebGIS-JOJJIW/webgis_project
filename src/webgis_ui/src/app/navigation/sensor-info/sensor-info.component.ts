@@ -19,8 +19,10 @@ export class SensorInfoComponent implements OnInit ,OnChanges{
 
   constructor(private _sharedService: SharedService) { }
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes['data']);
-    
+    // console.log(changes['data']);
+    if (changes['dataAll'] || changes['data']) {
+      this.initialSubscribe();
+    }
   }
   ngOnInit(): void {
     // console.log(this.lastestSensor);
