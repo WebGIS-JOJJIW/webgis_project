@@ -33,16 +33,14 @@
           <span class="category">{{ entry.key }}:</span>
           <span class="count">{{ entry.value }}</span>
         </div>
-        <!-- <span class="category">Vehicle:</span> <span class="count">{{item.detect['VEHICLE']}}</span> -->
-        <!-- <span class="category">Other:</span>
-        <span class="count">{{item.detect['OTHERS']}} <em></em></span> -->
-        
       </div>
-      <div class="sensor-data"><div class="sensor-images">
-        <div *ngFor="let img of item.img">
-          <img [src]="img" (click)="openImageModal(img)" alt="" />
+      <div class="sensor-data">
+        <div class="sensor-images">
+          <div *ngFor="let img of item.img; let i = index">
+            <img [src]="img" (click)="openImageModal(i, item.img)" alt="" />
+          </div>
         </div>
-      </div></div>
+      </div>
       <div class="sensor-data">
         <span class="count">{{item.recentEventCount}}</span
         ><span class="category">เหตุการณ์ใน 1 ชั่วโมง</span>
@@ -54,16 +52,24 @@
 
 
 <!-- Conditionally display the modal when an image is clicked -->
-<ng-container *ngIf="selectedImageUrl">
-  <ng-container *ngTemplateOutlet="imageModal; context: { image: selectedImageUrl }"></ng-container>
+<ng-container *ngIf="selectedImages && selectedImages.length > 0">
+  <ng-container *ngTemplateOutlet="imageSliderModal"></ng-container>
 </ng-container>
 
-<!-- Define the ng-template for the modal -->
-<ng-template #imageModal let-image="image">
-  <div class="modal" *ngIf="image">
+<!-- Define the ng-template for the slider modal -->
+<ng-template #imageSliderModal>
+  <div class="modal">
     <div class="modal-content">
       <span class="close" (click)="closeImageModal()">&times;</span>
-      <img [src]="image" alt="Full Image" />
+      
+      <!-- Previous Button -->
+      <button class="prev" (click)="prevImage()">&#10094;</button>
+      
+      <!-- Display the current image in the slider -->
+      <img [src]="selectedImages[selectedImageIndex]" alt="Full Image" />
+
+      <!-- Next Button -->
+      <button class="next" (click)="nextImage()">&#10095;</button>
     </div>
   </div>
 </ng-template>

@@ -8,24 +8,28 @@ import { SensorInfo } from '../../../models/sensorInfo.model';
   templateUrl: './sensor-info.component.html',
   styleUrl: './sensor-info.component.scss'
 })
-export class SensorInfoComponent implements OnInit ,OnChanges{
-  @Input() data!: SensorInfo[]; // unique sensor name 
-  @Input() dataAll! : SensorInfo[];// all sensor event  
+export class SensorInfoComponent implements OnInit, OnChanges {
+  @Input() data!: SensorInfo[];
+  @Input() dataAll!: SensorInfo[];
+
   isSensorDetails: boolean = false;
-  sensorName: string = ''
+  sensorName: string = '';
   lastestSensor!: SensorInfo;
-  sensorFilterName ! : SensorInfo[];
+  sensorFilterName!: SensorInfo[];
   mergedImages: any;
 
+  selectedImages: string[] = [];
+  selectedImageIndex: number = 0; // Holds the current index for the slider
+
   constructor(private _sharedService: SharedService) { }
+
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log(changes['data']);
     if (changes['dataAll'] || changes['data']) {
       this.initialSubscribe();
     }
   }
+
   ngOnInit(): void {
-    // console.log(this.lastestSensor);
     this.initialSubscribe();
   }
 
@@ -35,42 +39,51 @@ export class SensorInfoComponent implements OnInit ,OnChanges{
       if (this.isSensorDetails) {
         this.sensorName = res[0];
         this.lastestSensor = this.data
-          .filter((x: any) => x.name.toUpperCase() === this.sensorName.toUpperCase())[0] || [];  // Handle no match
+          .filter((x: any) => x.name.toUpperCase() === this.sensorName.toUpperCase())[0] || [];
 
         const imgArray = this.data
           .filter(x =>
-            x.name.toUpperCase() === this.sensorName.toUpperCase() &&  // Filter by sensor name
-            x.img && x.img.length > 0)  // Check if img exists and is not empty
-          .map((x: any) => x.img);  // Extract the image field
+            x.name.toUpperCase() === this.sensorName.toUpperCase() && 
+            x.img && x.img.length > 0)
+          .map((x: any) => x.img);
 
         this.mergedImages = (imgArray.flat()).slice(0, 4);
-        this.sensorFilterName = this.dataAll.filter((x: any) => x.name.toUpperCase() === this.sensorName.toUpperCase())
+        this.sensorFilterName = this.dataAll.filter((x: any) => x.name.toUpperCase() === this.sensorName.toUpperCase());
       } else {
         this.sensorName = '';
       }
-    }); //subscibe for real IsSensorDetails
+    });
   }
 
-  onClick(name : string){
+  onClick(name: string) {
     this._sharedService.setIsLoading(true);
-    this._sharedService.setIsSensorDetails(true,name);
+    this._sharedService.setIsSensorDetails(true, name);
     setTimeout(() => {
-      // Code to execute after the delay
       this._sharedService.setIsLoading(false);
-    }, 200); 
+    }, 200);
   }
 
   onClose() {
-    this._sharedService.resetIsSensorDetails()
+    this._sharedService.resetIsSensorDetails();
   }
 
-  selectedImageUrl: string | null = null;  // Holds the clicked image URL
-
-  openImageModal(imageUrl: string) {
-    this.selectedImageUrl = imageUrl;  // Set the clicked image URL
+  // Open image modal with a slider starting at the clicked image index
+  openImageModal(index: number, images: string[]) {
+    this.selectedImages = images;
+    this.selectedImageIndex = index;
   }
 
   closeImageModal() {
-    this.selectedImageUrl = null;  // Clear the selected image URL to hide the modal
+    this.selectedImages = []; // Clear the images when the modal is closed
+  }
+
+  // Navigate to the previous image
+  prevImage() {
+    this.selectedImageIndex = (this.selectedImageIndex > 0) ? this.selectedImageIndex - 1 : this.selectedImages.length - 1;
+  }
+
+  // Navigate to the next image
+  nextImage() {
+    this.selectedImageIndex = (this.selectedImageIndex < this.selectedImages.length - 1) ? this.selectedImageIndex + 1 : 0;
   }
 }

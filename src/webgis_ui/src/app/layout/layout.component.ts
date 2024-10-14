@@ -143,7 +143,7 @@ export class LayoutComponent implements OnInit {
     });
 
 
-    console.log('this.eventFilter', this.eventFilter);
+    // console.log('this.eventFilter', this.eventFilter);
 
   }
 
