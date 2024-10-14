@@ -1,4 +1,4 @@
-import { Component, input, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, input, Input, OnInit } from '@angular/core';
 import { SensorInfo } from '../../../../models/sensorInfo.model';
 import { SharedService } from '../../../_shared/services/shared.service';
 
@@ -7,7 +7,7 @@ import { SharedService } from '../../../_shared/services/shared.service';
   templateUrl: './images-details.component.html',
   styleUrl: './images-details.component.scss'
 })
-export class ImagesDetailsComponent  {
+export class ImagesDetailsComponent  implements AfterViewInit{
   @Input() imgArr = []
   @Input() fisrtUrl =''
   @Input() data! : SensorInfo[];
@@ -16,6 +16,9 @@ export class ImagesDetailsComponent  {
   selectedImageIndex: number = 0; // Holds the current index for the slider
 
   constructor(private _sharedService: SharedService) { }
+  ngAfterViewInit(): void {
+    window.addEventListener('keydown', this.handleKeyDown.bind(this));
+  }
   onClose() {
     this._sharedService.resetIsSensorDetails();
   }
@@ -38,5 +41,24 @@ export class ImagesDetailsComponent  {
   // Navigate to the next image
   nextImage() {
     this.selectedImageIndex = (this.selectedImageIndex < this.selectedImages.length - 1) ? this.selectedImageIndex + 1 : 0;
+  }
+
+  // Handle keydown events
+  handleKeyDown(event: KeyboardEvent) {
+    // console.log(event);
+    
+    if (this.selectedImages.length === 0) return;  // Only handle if modal is open
+
+    switch (event.key) {
+      case 'Escape':  // Close modal on Esc key
+        this.closeImageModal();
+        break;
+      case 'ArrowLeft':  // Navigate to the previous image
+        this.prevImage();
+        break;
+      case 'ArrowRight':  // Navigate to the next image
+        this.nextImage();
+        break;
+    }
   }
 }

@@ -31,6 +31,7 @@ export class SensorInfoComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.initialSubscribe();
+    window.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
   initialSubscribe(): void {
@@ -85,5 +86,27 @@ export class SensorInfoComponent implements OnInit, OnChanges {
   // Navigate to the next image
   nextImage() {
     this.selectedImageIndex = (this.selectedImageIndex < this.selectedImages.length - 1) ? this.selectedImageIndex + 1 : 0;
+  }
+  
+  selectImage(index: number) {
+    this.selectedImageIndex = index;
+  }
+  // Handle keydown events
+  handleKeyDown(event: KeyboardEvent) {
+    // console.log(event);
+    
+    if (this.selectedImages.length === 0) return;  // Only handle if modal is open
+
+    switch (event.key) {
+      case 'Escape':  // Close modal on Esc key
+        this.closeImageModal();
+        break;
+      case 'ArrowLeft':  // Navigate to the previous image
+        this.prevImage();
+        break;
+      case 'ArrowRight':  // Navigate to the next image
+        this.nextImage();
+        break;
+    }
   }
 }
