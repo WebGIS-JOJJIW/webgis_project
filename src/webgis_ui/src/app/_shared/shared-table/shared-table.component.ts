@@ -36,7 +36,7 @@ export class SharedTableComponent implements OnInit ,OnChanges{
   onSearchChange(event: any) {
     const searchTerm = event.target.value.toLowerCase();
     this.searchTermChange.emit(searchTerm);
-    console.log('searchTerm');
+    // console.log('searchTerm');
     
     this.filteredData = this.data.filter(row => {
       return Object.values(row).some(value => {

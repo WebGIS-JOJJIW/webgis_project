@@ -37,15 +37,20 @@ $breakpoint-xl: 1200px;
 }
 
 .nav-link:hover {
-  background-color: #555;
+  background-color: #627B7A;
+  border-radius: 3px;
   color: #fff;
 }
 
 .nav-item.active .nav-link {
-  background-color: #58564a;
+  background-color: #627B7A;
+  border-radius: 3px;
   color: #fff;
 }
 
+.nav-item{
+  margin-right: 10px;
+}
 .icon-side {
   width: 25px;
   height: 25px;
@@ -104,5 +109,13 @@ $breakpoint-xl: 1200px;
         margin-bottom: 10px;
       }
     }
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-expand-lg .navbar-collapse {
+      display: flex !important;
+      flex-basis: auto;
+      justify-content: space-around;
   }
 }

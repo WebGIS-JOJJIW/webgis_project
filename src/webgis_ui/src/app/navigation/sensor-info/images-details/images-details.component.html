@@ -67,13 +67,20 @@
       <span class="close" (click)="closeImageModal()">&times;</span>
       
       <!-- Previous Button -->
-      <button class="prev" (click)="prevImage()">&#10094;</button>
+      <button class="prev" (click)="prevImage()" [disabled]="selectedImageIndex === 0">&#10094;</button>
       
       <!-- Display the current image in the slider -->
-      <img [src]="selectedImages[selectedImageIndex]" alt="Full Image" />
+      <img [src]="selectedImages[selectedImageIndex]" alt="Full Image" class="main-image"/>
 
       <!-- Next Button -->
-      <button class="next" (click)="nextImage()">&#10095;</button>
+      <button class="next" (click)="nextImage()" [disabled]="selectedImageIndex === selectedImages.length - 1">&#10095;</button>
+    </div>
+
+    <!-- Thumbnails -->
+    <div class="thumbnail-container">
+      <div class="thumbnail" *ngFor="let img of selectedImages; let i = index" (click)="selectImage(i)">
+        <img [src]="img" [class.selected]="i === selectedImageIndex" />
+      </div>
     </div>
   </div>
 </ng-template>

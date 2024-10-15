@@ -43,6 +43,9 @@ export class ImagesDetailsComponent  implements AfterViewInit{
     this.selectedImageIndex = (this.selectedImageIndex < this.selectedImages.length - 1) ? this.selectedImageIndex + 1 : 0;
   }
 
+  selectImage(index: number) {
+    this.selectedImageIndex = index;
+  }
   // Handle keydown events
   handleKeyDown(event: KeyboardEvent) {
     // console.log(event);

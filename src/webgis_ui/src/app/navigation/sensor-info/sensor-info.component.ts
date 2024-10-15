@@ -44,12 +44,24 @@ export class SensorInfoComponent implements OnInit, OnChanges {
 
         const imgArray = this.data
           .filter(x =>
-            x.name.toUpperCase() === this.sensorName.toUpperCase() && 
+            x.name.toUpperCase() === this.sensorName.toUpperCase() &&
             x.img && x.img.length > 0)
           .map((x: any) => x.img);
 
         this.mergedImages = (imgArray.flat()).slice(0, 4);
         this.sensorFilterName = this.dataAll.filter((x: any) => x.name.toUpperCase() === this.sensorName.toUpperCase());
+
+        const uniqueSensors = new Set();
+
+        this.sensorFilterName = this.sensorFilterName.filter((ele: any) => {
+          // Check if the sensor is already in the Set based on a unique property, like sensor_id
+          if (!uniqueSensors.has(ele.event_id)) {
+            // Add the sensor_id to the Set if it's unique
+            uniqueSensors.add(ele.event_id);
+            return true;  // Keep the element in the filtered array
+          }
+          return false;  // Remove the element from the filtered array if sensor_id is not unique
+        });
       } else {
         this.sensorName = '';
       }
@@ -87,14 +99,14 @@ export class SensorInfoComponent implements OnInit, OnChanges {
   nextImage() {
     this.selectedImageIndex = (this.selectedImageIndex < this.selectedImages.length - 1) ? this.selectedImageIndex + 1 : 0;
   }
-  
+
   selectImage(index: number) {
     this.selectedImageIndex = index;
   }
   // Handle keydown events
   handleKeyDown(event: KeyboardEvent) {
     // console.log(event);
-    
+
     if (this.selectedImages.length === 0) return;  // Only handle if modal is open
 
     switch (event.key) {

@@ -35,7 +35,7 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
   addPOILayer(): void {
     const layerId = 'poi_marker'
     this.GeoDataService.getFeatures('sensors').subscribe(res => {
-      console.log(res);
+      // console.log(res);
 
       // // Add a new GeoJSON source with clustering enabled
       this.mapComponent.map.addSource(layerId, { 

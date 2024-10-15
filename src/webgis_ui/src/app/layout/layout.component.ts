@@ -56,10 +56,12 @@ export class LayoutComponent implements OnInit {
       this.cdr.detectChanges();
     })
 
-    this._sharedSevice.currentIsLoading.subscribe(x=> this.isLoading = x);
+    this._sharedSevice.currentIsLoading.subscribe(x => this.isLoading = x);
   }
 
   updateEventsData(data: any[]): void {
+    // console.log(data);
+
     this.eventsData = data.map((item: any) => {
       return {
         date: _SharedModule.formatDateTimeLocal(item.dt),
@@ -104,20 +106,21 @@ export class LayoutComponent implements OnInit {
       }
       return false;  // Remove the element from the filtered array if sensor_id is not unique
     });
-    // console.log(uniqueSensors);
-    
 
     // After filtering unique sensors, you can still process the images
     this.eventFilter.forEach((ele: any) => {
 
-      const date = new Date(ele.date); // Convert string date to Date object
-      const oneHourAgo = new Date(date.getTime() - 60 * 60 * 1000); // Subtract one hour
+      const [datePart, timePart] = ele.date.split(' ');
+      const [day, month, year] = datePart.split('/').map(Number);
+      const [hours, minutes, seconds] = timePart.split(':').map(Number);
+
+      const oneHourAgo = new Date(year, month - 1, day, hours-1, minutes, seconds);
       ele.img = eventImage
         .filter((x: any) => x.event_id === ele.event_id)  // Filter based on event_id
         .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`);  // Extract imgValue from each filtered object
 
-      const recentEventCount = eventImage
-        .filter((x: any) => x.event_id === ele.event_id && new Date(x.event_time) > oneHourAgo) // Filter by event_id and time
+      const recentEventCount = this.eventsData
+        .filter((x: any) => x.event_id === ele.event_id && new Date(x.date) > oneHourAgo) // Filter by event_id and time
         .length; // Get the count of filtered events
 
       // You can store the count in the ele object if needed
@@ -126,8 +129,11 @@ export class LayoutComponent implements OnInit {
 
     this.eventFlterAll.forEach(ele => {
       // Assuming ele.event_time is the timestamp of the event
-      const date = new Date(ele.date); // Convert string date to Date object
-      const oneHourAgo = new Date(date.getTime() - 60 * 60 * 1000); // Subtract one hour
+      const [datePart, timePart] = ele.date.split(' ');
+      const [day, month, year] = datePart.split('/').map(Number);
+      const [hours, minutes, seconds] = timePart.split(':').map(Number);
+
+      const oneHourAgo = new Date(year, month - 1, day, hours-1, minutes, seconds);
 
       ele.img = eventImage
         .filter((x: any) => x.event_id === ele.event_id) // Filter based on event_id
