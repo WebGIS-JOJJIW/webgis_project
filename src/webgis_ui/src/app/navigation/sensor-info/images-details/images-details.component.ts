@@ -7,7 +7,7 @@ import { SharedService } from '../../../_shared/services/shared.service';
   templateUrl: './images-details.component.html',
   styleUrl: './images-details.component.scss'
 })
-export class ImagesDetailsComponent  implements AfterViewInit{
+export class ImagesDetailsComponent  implements OnInit{
   @Input() imgArr = []
   @Input() fisrtUrl =''
   @Input() data! : SensorInfo[];
@@ -16,9 +16,11 @@ export class ImagesDetailsComponent  implements AfterViewInit{
   selectedImageIndex: number = 0; // Holds the current index for the slider
 
   constructor(private _sharedService: SharedService) { }
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     window.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
+
+  
   onClose() {
     this._sharedService.resetIsSensorDetails();
   }

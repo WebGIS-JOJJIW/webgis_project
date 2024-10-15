@@ -21,7 +21,15 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
     this.actionCableService.subscribeToChannel('SensorDataChannel', null , (data: any) => {
       // console.log('Received:', data); // Handle incoming real-time data here
     });
+
+    this._sharedService.currentIsStyleChanged.subscribe((styleChanged)=>{
+      if(styleChanged){
+        this.addPOILayer();
+        this.addRasterOnMap();
+      }
+    })
   }
+
   ngAfterViewInit(): void {
     this.mapComponent.addCustomImages();
     this.addRasterOnMap();
@@ -141,12 +149,11 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
           setTimeout(() => {
             // Code to execute after the delay
             this._sharedService.setIsLoading(false);
-          }, 200); 
-          
+          }, 200);  
         }
-
       });
     });
+    
   }
   //#endregion
 
@@ -157,25 +164,26 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
     const name = '02';
     const rasterUrl = `http://138.197.163.159:8000/geoserver/gis/wms?service=WMS&version=1.1.0&request=GetMap&layers=gis%3A${name}&bbox={bbox-epsg-3857}&width=512&height=512&srs=EPSG%3A3857&styles=&format=image%2Fpng&TRANSPARENT=true`;
 
-    const rasterSource: maplibregl.SourceSpecification = {
-      type: 'raster',
-      tiles: [rasterUrl],
-      tileSize: 512
-    };
 
-    const rasterLayer: maplibregl.LayerSpecification = {
-      id: rasterLayerId,
-      type: 'raster',
-      source: rasterSourceId,
-      minzoom: 0,
-      maxzoom: 22
-    };
-
-    this.mapComponent.map.on('load', () => {
-      // Add raster layer to the map
-      this.mapComponent.addLayer(rasterLayer, rasterSource, rasterSourceId);
-    })
-    // Retrieve and handle the BBOX for the raster layer
+    
+    this.mapComponent.map.on('styledata', () => {
+      if (!this.mapComponent.map.getSource(rasterSourceId)) {
+        this.mapComponent.map.addSource(rasterSourceId,{
+          type: 'raster',
+          tiles: [rasterUrl],
+          tileSize: 512
+        });
+      }
+      if (!this.mapComponent.map.getLayer(rasterLayerId)) {
+        this.mapComponent.map.addLayer({
+          id: rasterLayerId,
+          type: 'raster',
+          source: rasterSourceId,
+          minzoom: 0,
+          maxzoom: 22
+        });
+      }
+    });
 
     setTimeout(() => {
       this.getRasterLayerBbox(name);

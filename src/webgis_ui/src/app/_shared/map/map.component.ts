@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, HostListener } from '@angular/core
 import * as maplibregl from 'maplibre-gl';
 import { StyleControl } from '../../../models/stylecontrol';
 import { Router } from '@angular/router';
+import { SharedService } from '../services/shared.service';
 
 @Component({
   selector: 'app-map',
@@ -14,7 +15,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   map!: maplibregl.Map;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,private _sharedService:SharedService) { }
 
   ngOnInit(): void {
     this.initializeMap();
@@ -72,7 +73,7 @@ export class MapComponent implements OnInit, OnDestroy {
       trackUserLocation: true,
       showUserLocation: true,
     }), 'bottom-right');
-    this.map.addControl(new StyleControl(), 'bottom-left');
+    this.map.addControl(new StyleControl(this._sharedService), 'bottom-left');
   }
 
 

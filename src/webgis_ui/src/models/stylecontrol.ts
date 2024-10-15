@@ -1,10 +1,12 @@
+import { SharedService } from "../app/_shared/services/shared.service";
+
 export class StyleControl {
     map: maplibregl.Map | undefined; // Declare the map property
     basicStyle: string;
     satelliteStyle: string;
     private satelliteButton!: HTMLElement; // Store reference to the button
     private isSatellite: boolean = false;
-    constructor() {
+    constructor(private _sharedService:SharedService) {
         this.basicStyle = 'https://api.maptiler.com/maps/basic-v2/style.json?key=89niYR6Aow3J66RlqxlA';
         this.satelliteStyle = 'https://api.maptiler.com/maps/d9a4b917-d11b-4c66-8566-d42eb37737ec/style.json?key=89niYR6Aow3J66RlqxlA';
     }
@@ -30,7 +32,7 @@ export class StyleControl {
 
     toggleStyle(): void {
         this.isSatellite = !this.isSatellite;
-
+        
         // Toggle between basic and satellite style
         const newStyle = this.isSatellite ? this.satelliteStyle : this.basicStyle;
         this.map?.setStyle(newStyle);
@@ -39,6 +41,8 @@ export class StyleControl {
         const imageSrc = this.isSatellite ? 'assets/img/basic.jpg' : 'assets/img/sattellite.jpeg'; // Adjust paths as necessary
         const imgElement = this.satelliteButton.querySelector('img') as HTMLImageElement;
         imgElement.src = imageSrc; // Change the image source
+        this._sharedService.setIsStyleChanged(true);
+
     }
 
     onRemove() {

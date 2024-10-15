@@ -16,7 +16,6 @@ export class SharedService {
   resetIsSensorDetails(){
     this.isSensorDetails.next(['', false]);
   }
-  
 
   //IsLoading for loading page show 
   private isLoading = new BehaviorSubject<boolean>(false);
@@ -26,5 +25,15 @@ export class SharedService {
   }
   resetIsLoading(){
     this.isLoading.next(false);
+  }
+
+  //IsStyleChange for reload data when changeStyle 
+  private isStyleChanged = new BehaviorSubject<boolean>(false);
+  currentIsStyleChanged = this.isStyleChanged.asObservable();
+  setIsStyleChanged(res:boolean){
+    this.isStyleChanged.next(res);
+  }
+  resetIsStyleChanged(){
+    this.isStyleChanged.next(false);
   }
 }

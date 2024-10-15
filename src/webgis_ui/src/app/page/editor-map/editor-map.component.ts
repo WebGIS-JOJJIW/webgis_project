@@ -13,6 +13,12 @@ export class EditorMapComponent implements  AfterViewInit {
   constructor(){}
   
   ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.add3DMap();
+    }, 100)
+  }
+
+  add3DMap(){
     const newMap = new maplibregl.Map({
       container: 'map',
       style: { // Custom style for the editor map
