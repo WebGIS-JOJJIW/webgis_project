@@ -119,8 +119,29 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   .close-button {
+    background-color: #556e71; // Match the background color from the image
+    border: 1px solid #c1bfbf; // Add border similar to the image
+    border-radius: 4px; // Rounded corners
+    color: white; // Text color
+    font-size: 14px; // Adjust text size to match the image
+    padding: 5px 10px; // Add padding for size adjustment
+    cursor: pointer;
+    display: inline-flex; // Ensure icon and text are on the same line
+    align-items: center; // Vertically center the content
+    justify-content: space-between; // Space between text and close icon
+    
+    &:hover {
+      background-color: #3d565a; // Darker hover effect
+    }
+    
+    .close-icon {
+      margin-left: 10px; // Add some space between the text and the icon
+      font-size: 14px; // Ensure the size of the "×" icon is appropriate
+    }
+  }
+
+  .full-button {
     background: none;
     border: none;
     color: white;
@@ -128,7 +149,7 @@ input {
     cursor: pointer;
     padding: 0;
 
-    .close-icon {
+    .full-icon {
       width: 20px; /* Adjust icon size */
       height: 20px; /* Adjust icon size */
       object-fit: contain; /* Ensures the icon keeps its aspect ratio */
@@ -158,7 +179,7 @@ input {
 ::-webkit-scrollbar-thumb {
   background-color: #888; /* สีของ scrollbar */
   border-radius: 10px; /* ความโค้งมน */
-  border: 4px solid #1E2124; /* เพิ่มขอบใน scrollbar */
+  border: 4px solid #0B2026; /* เพิ่มขอบใน scrollbar */
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -205,7 +226,7 @@ strong{
   // border-radius: 10px;
   color: white;
   // width: 300px;
-  border-bottom: 1px solid #475a59;
+  border-bottom: 1px solid #0B2026;
   height: 100%;
   overflow-y: scroll;
 
