@@ -1,5 +1,5 @@
 app-images-details {
-  max-height: 540px; /* Set max height */
+  max-height: 790px; /* Set max height */
   overflow-y: auto; /* Enable vertical scrolling */
 }
 
@@ -71,6 +71,7 @@ app-images-details {
   max-height: 500px;   /* Set maximum height for the image to 500px */
   height: auto;        /* Maintain aspect ratio */
   object-fit: contain; 
+  background-color: #1e2a34;
 }
 
 .thumbnail-container {

@@ -114,6 +114,7 @@ p {
   max-height: 500px;   /* Set maximum height for the image to 500px */
   height: auto;        /* Maintain aspect ratio */
   object-fit: contain; 
+  background-color: #1e2a34;
 }
 
 .thumbnail-container {
