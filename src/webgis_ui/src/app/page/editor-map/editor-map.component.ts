@@ -8,17 +8,17 @@ import { MapComponent } from '../../_shared/map/map.component';
   templateUrl: './editor-map.component.html',
   styleUrls: ['./editor-map.component.scss']
 })
-export class EditorMapComponent implements  AfterViewInit {
+export class EditorMapComponent implements AfterViewInit {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
-  constructor(){}
-  
+  constructor() { }
+
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.add3DMap();
     }, 100)
   }
 
-  add3DMap(){
+  add3DMap() {
     const newMap = new maplibregl.Map({
       container: 'map',
       style: { // Custom style for the editor map
@@ -45,7 +45,7 @@ export class EditorMapComponent implements  AfterViewInit {
           }
         ]
       },
-      center: [-87.61694, 41.86625],
+      center: [100.499, 13.752],
       zoom: 15.99,
       pitch: 40,
       bearing: 20,
@@ -62,8 +62,6 @@ export class EditorMapComponent implements  AfterViewInit {
       'type': 'fill-extrusion',
       'source': 'floorplan',
       'paint': {
-        // See the MapLibre Style Specification for details on data expressions.
-        // https://maplibre.org/maplibre-style-spec/expressions/
 
         // Get the fill-extrusion-color from the source 'color' property.
         'fill-extrusion-color': ['get', 'color'],
@@ -79,8 +77,69 @@ export class EditorMapComponent implements  AfterViewInit {
       }
     };
 
-    this.mapComponent.map.once('load',()=>{
-      this.mapComponent.addLayer(Layer,Source,'floorplan');
+    const geojsonSource: maplibregl.GeoJSONSourceOptions = {
+      type: 'geojson',
+      data: this.exampleGeoJson
+    };
+
+    const geojsonLayer: maplibregl.LayerSpecification = {
+      'id': '3d-buildings',
+      'type': 'fill-extrusion',
+      'source': 'buildings',  // Use the source id "buildings"
+      'paint': {
+        'fill-extrusion-color': ['get', 'color'],  // Use the 'color' property
+        'fill-extrusion-height': ['get', 'height'],  // Use the 'height' property
+        'fill-extrusion-base': ['get', 'base_height'],  // Use the 'base_height' property
+        'fill-extrusion-opacity': 0.6  // Slight transparency for 3D buildings
+      }
+    };
+
+    this.mapComponent.map.once('load', () => {
+      this.mapComponent.addLayer(Layer, Source, 'floorplan'); // example from maplibre
+      this.mapComponent.addLayer(geojsonLayer, geojsonSource, 'buildings'); // example from ai 
     })
   }
+
+  exampleGeoJson: GeoJSON.FeatureCollection = {
+    'type': 'FeatureCollection',
+    'features': [
+      {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Polygon',
+          'coordinates': [[
+            [100.499, 13.752],
+            [100.501, 13.752],
+            [100.501, 13.754],
+            [100.499, 13.754],
+            [100.499, 13.752]
+          ]]
+        },
+        'properties': {
+          'height': 100,
+          'base_height': 0,
+          'color': '#ff0000'  // Red for demonstration
+        }
+      },
+      {
+        'type': 'Feature',
+        'geometry': {
+          'type': 'Polygon',
+          'coordinates': [[
+            [100.502, 13.752],
+            [100.504, 13.752],
+            [100.504, 13.754],
+            [100.502, 13.754],
+            [100.502, 13.752]
+          ]]
+        },
+        'properties': {
+          'height': 50,
+          'base_height': 10,
+          'color': '#0000ff'  // Blue for demonstration
+        }
+      }
+    ]
+  };
+
 }
