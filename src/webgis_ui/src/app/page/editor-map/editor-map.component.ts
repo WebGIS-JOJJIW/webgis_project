@@ -45,7 +45,7 @@ export class EditorMapComponent implements AfterViewInit {
           }
         ]
       },
-      center: [100.499, 13.752],
+      center: [100.502, 13.752],
       zoom: 15.99,
       pitch: 40,
       bearing: 20,
@@ -94,9 +94,27 @@ export class EditorMapComponent implements AfterViewInit {
       }
     };
 
+    const wallSource: maplibregl.GeoJSONSourceOptions = {
+      type: 'geojson',
+      data: this.wallGeoJson  // Use the wall GeoJSON data
+    };
+
+    const wallLayer: maplibregl.LayerSpecification = {
+      'id': '3d-wall',
+      'type': 'fill-extrusion',
+      'source': 'wall',  // Use the source id "wall"
+      'paint': {
+        'fill-extrusion-color': ['get', 'color'],  // Use the 'color' property
+        'fill-extrusion-height': ['get', 'height'],  // Use the 'height' property
+        'fill-extrusion-base': ['get', 'base_height'],  // Use the 'base_height' property
+        'fill-extrusion-opacity': 0.8  // Higher opacity for solid wall appearance
+      }
+    };
+
     this.mapComponent.map.once('load', () => {
       this.mapComponent.addLayer(Layer, Source, 'floorplan'); // example from maplibre
       this.mapComponent.addLayer(geojsonLayer, geojsonSource, 'buildings'); // example from ai 
+      this.mapComponent.addLayer(wallLayer, wallSource, 'wall'); // example from ai 
     })
   }
 
@@ -142,4 +160,102 @@ export class EditorMapComponent implements AfterViewInit {
     ]
   };
 
+  wallGeoJson: GeoJSON.FeatureCollection =
+    {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "level": 1,
+            "name": "Wall 1",
+            "height": 30,
+            "base_height": 0,
+            "color": "grey"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [100.5060, 13.752],  // Bottom-left corner
+                [100.5060, 13.754],  // Top-left corner
+                [100.5065, 13.754],  // Top-right corner
+                [100.5065, 13.752],  // Bottom-right corner
+                [100.5060, 13.752]   // Close the polygon
+              ]
+            ]
+          },
+          "id": "wall1"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "level": 1,
+            "name": "Wall 2",
+            "height": 30,
+            "base_height": 0,
+            "color": "grey"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [100.5065, 13.752],  // Bottom-right corner
+                [100.5065, 13.754],  // Top-right corner
+                [100.5070, 13.754],  // Top-right diagonal
+                [100.5070, 13.752],  // Bottom-right diagonal
+                [100.5065, 13.752]   // Close the polygon
+              ]
+            ]
+          },
+          "id": "wall2"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "level": 1,
+            "name": "Wall 3",
+            "height": 30,
+            "base_height": 0,
+            "color": "red"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [100.5070, 13.752],  // Bottom-right diagonal
+                [100.5070, 13.754],  // Top-right diagonal
+                [100.5075, 13.754],  // Top-right extended
+                [100.5075, 13.752],  // Bottom-right extended
+                [100.5070, 13.752]   // Close the polygon
+              ]
+            ]
+          },
+          "id": "wall3"
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "level": 1,
+            "name": "Wall 4",
+            "height": 30,
+            "base_height": 0,
+            "color": "blue"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [100.5075, 13.752],  // Bottom-right extended
+                [100.5075, 13.754],  // Top-right extended
+                [100.5077, 13.754],  // Top-right other corner
+                [100.5077, 13.752],  // Bottom-right other corner
+                [100.5075, 13.752]   // Close the polygon
+              ]
+            ]
+          },
+          "id": "wall4"
+        }
+      ]
+    };
 }
