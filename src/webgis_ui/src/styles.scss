@@ -202,10 +202,6 @@ input {
   // height: 96%;
   // overflow-y: scroll;
 
-  max-height: calc(100vh - 100px);
-  // max-height: 770px;
-  overflow-y: scroll;
-
 }
 
 span {
@@ -216,7 +212,10 @@ span {
 .bordered-row {
   border-top: 2px solid #1e2124; /* Black border at the top */
   border-bottom: 2px solid #1e2124; /* Black border at the bottom */
-  padding: 0 0 10px /* Optional: Add some padding */
+  padding: 0 0 10px; /* Optional: Add some padding */
+  max-height: calc(100vh - 200px);
+  // max-height: 770px;
+  overflow-y: scroll;
 }
 
 strong{
