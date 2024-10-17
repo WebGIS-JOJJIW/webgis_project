@@ -1,0 +1,17 @@
+networks:
+  webgis_net2:
+    name: webgis_net2
+    driver: bridge
+
+services:
+  new_ui_serve:
+    image: new_ui_serve
+    build:
+      context: artifact_serve
+      dockerfile: artifact_serve/Dockerfile
+    container_name: new_ui_serve
+    networks:
+      - webgis_net2
+    ports:
+      - 81:8080
+    restart: always
