@@ -43,7 +43,7 @@ export class LayoutComponent implements OnInit {
         recentEventCount: 0,
       })
 
-      this.eventsData = [...this.eventsData, newSensor].sort((a, b) => {
+      this.eventsData = [newSensor, ...this.eventsData].sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
 

@@ -24,9 +24,15 @@ export class SharedTableComponent implements OnInit ,OnChanges{
 
   constructor(private cdr: ChangeDetectorRef) { }
   ngOnChanges(changes: SimpleChanges) {
+    // console.log('changes', changes);
+    
     if (changes['data']) {
       this.filteredData = this.data;  // Update filtered data when data changes
+      this.cdr.detectChanges();
+      // console.log(this.filteredData);
+      
     }
+    
   }
 
   ngOnInit() {
