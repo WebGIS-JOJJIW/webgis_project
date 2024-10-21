@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment.dev';
 import { _SharedModule } from '../_shared/_shared.module';
 import { SensorInfo } from '../../models/sensorInfo.model';
 import { SharedService } from '../_shared/services/shared.service';
+import { ToastService } from '../../services/toast/toast.service';
 
 @Component({
   selector: 'app-layout',
@@ -25,38 +26,55 @@ export class LayoutComponent implements OnInit {
   constructor(private actionCableService: ActionCableService,
     private sensorDataService: SensorDataService,
     private cdr: ChangeDetectorRef, // Inject ChangeDetectorRef
-    private _sharedSevice: SharedService
+    private _sharedService: SharedService,
+    public toastService: ToastService  // Inject ToastService
   ) { }
 
   ngOnInit(): void {
-    this.actionCableService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
-      const newSensor = new SensorInfo({
-        date: _SharedModule.formatDateTimeLocal(data.dt),
-        type: 'Alarm',
-        system: 'SENSOR',
-        details: `${data.sensor_name.toUpperCase()} -  ${data.value}`,
-        imgValue: data.value,
-        name: data.sensor_name.toUpperCase(),
-        img: [''],
-        event_id: data.event_id,
-        detect: this.detectType(data),
-        recentEventCount: 0,
-      })
+    try {
+      // this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 5000 });
+      // Subscribe to the sensor data channel
+      this.actionCableService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
+        const newSensor = new SensorInfo({
+          date: _SharedModule.formatDateTimeLocal(data.dt),
+          type: 'Alarm',
+          system: 'SENSOR',
+          details: `${data.sensor_name.toUpperCase()} -  ${data.value}`,
+          imgValue: data.value,
+          name: data.sensor_name.toUpperCase(),
+          img: [''],
+          event_id: data.event_id,
+          detect: this.detectType(data),
+          recentEventCount: 0,
+        });
 
-      this.eventsData = [newSensor, ...this.eventsData].sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
+        this.eventsData = [newSensor, ...this.eventsData].sort((a, b) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+
+        this.filterSensorData();
       });
 
-      this.filterSensorData();
-    });
+      // Get all sensor events from the service
+      this.sensorDataService.getAllSensorEvents().subscribe({
+        next: res => {
+          this.updateEventsData(res);
+          // Manually trigger change detection to update the view
+          this.cdr.detectChanges();
+        },
+        error: err => {
+          // Handle errors here
+          console.error('Error fetching sensor events', err);
+          this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 2000 });
+        }
+      });
 
-    this.sensorDataService.getAllSensorEvents().subscribe(res => {
-      this.updateEventsData(res);
-      // Manually trigger change detection to update the view
-      this.cdr.detectChanges();
-    })
-
-    this._sharedSevice.currentIsLoading.subscribe(x => this.isLoading = x);
+      this._sharedService.currentIsLoading.subscribe(x => this.isLoading = x);
+    } catch (err) {
+      // Catch any other errors
+      console.error('Unexpected error:', err);
+      this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 2000 });
+    }
   }
 
   updateEventsData(data: any[]): void {
@@ -83,13 +101,11 @@ export class LayoutComponent implements OnInit {
 
   filterSensorData() {
     this.eventFilter = this.eventsData.filter((x: any) => {
-      // Exclude events where 'details' ends with any of the image types
       return !environment.typeImg.some((type) => x.details.endsWith(type));
     });
 
     this.eventFlterAll = this.eventFilter;
     const eventImage = this.eventsData.filter((x: any) => {
-      // Exclude events where 'details' ends with any of the image types
       return environment.typeImg.some((type) => x.details.endsWith(type));
     });
 
@@ -147,9 +163,6 @@ export class LayoutComponent implements OnInit {
       // You can store the count in the ele object if needed
       ele.recentEventCount = recentEventCount; // Add the count to the element
     });
-
-
-    // console.log('this.eventFilter', this.eventFilter);
 
   }
 

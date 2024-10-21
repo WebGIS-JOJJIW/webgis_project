@@ -1,3 +1,18 @@
+<div class="toast-container position-fixed start-50 bottom-0 translate-middle-x p-3" >
+  <ngb-toast
+    *ngFor="let toast of toastService.toasts"
+    [autohide]="true"
+    [delay]="toast.delay || 5000"
+    class="{{ toast.classname }}"
+    (hidden)="toastService.remove(toast)">
+    <ng-template [ngIf]="toastService.isTemplate(toast)" [ngIfElse]="text">
+      <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
+    </ng-template>
+    <ng-template #text>{{ toast.textOrTpl }}</ng-template>
+  </ngb-toast>
+</div>
+
+
 <app-loading [isLoading]="isLoading"></app-loading>
 <div class="container-fluid">
   <div class="row align-items-start">

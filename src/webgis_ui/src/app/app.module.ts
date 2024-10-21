@@ -19,6 +19,8 @@ import { FooterComponent } from './navigation/sensor-info/footer/footer.componen
 import { ImagesDetailsComponent } from './navigation/sensor-info/images-details/images-details.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoadingComponent } from './_shared/loading/loading.component';
+import { AlertComponent } from './_shared/alert/alert.component';
+import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { LoadingComponent } from './_shared/loading/loading.component';
     HeaderComponent,
     FooterComponent,
     ImagesDetailsComponent,
-    LoadingComponent
+    LoadingComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +45,8 @@ import { LoadingComponent } from './_shared/loading/loading.component';
     FormsModule,
     ReactiveFormsModule,
     // BaseChartDirective,
-    HttpClientModule
+    HttpClientModule,
+    NgbToastModule
     
 ],
   providers: [],
