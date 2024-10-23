@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { SensorDataLiveService } from '../../services/sensors/sensor-data-live.service';
 import { SensorDataHistService } from '../../services/sensors/sensor-data-historical.service';
-import { environment } from '../../environments/environment.dev';
+import { environment } from '../../environments/environment';
 import { _SharedModule } from '../_shared/_shared.module';
 import { SensorInfo } from '../../models/sensorInfo.model';
 import { SharedService } from '../_shared/services/shared.service';

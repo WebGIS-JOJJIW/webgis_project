@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GeoserverDataService } from '../../../services/geoserver/geoserver-data.service';
 import { MapComponent } from '../../_shared/map/map.component';
-import { environment } from '../../../environments/environment.dev';
+import { environment } from '../../../environments/environment';
 import { GeoJSONSource } from 'maplibre-gl';
 import { SharedService } from '../../_shared/services/shared.service';
 import { SensorDataLiveService } from '../../../services/sensors/sensor-data-live.service';
