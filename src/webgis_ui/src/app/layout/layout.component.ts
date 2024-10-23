@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActionCableService } from '../../services/sensors/sensor-data-live.service';
-import { SensorDataService } from '../../services/sensors/sensor-data-historical.service';
+import { SensorDataLiveService } from '../../services/sensors/sensor-data-live.service';
+import { SensorDataHistService } from '../../services/sensors/sensor-data-historical.service';
 import { environment } from '../../environments/environment.dev';
 import { _SharedModule } from '../_shared/_shared.module';
 import { SensorInfo } from '../../models/sensorInfo.model';
@@ -23,8 +23,8 @@ export class LayoutComponent implements OnInit {
     { header: 'ระบบ', field: 'system' },
     { header: 'รายละเอียด', field: 'details' }
   ];
-  constructor(private actionCableService: ActionCableService,
-    private sensorDataService: SensorDataService,
+  constructor(private sensorDataLiveService: SensorDataLiveService,
+    private sensorDataService: SensorDataHistService,
     private cdr: ChangeDetectorRef, // Inject ChangeDetectorRef
     private _sharedService: SharedService,
     public toastService: ToastService  // Inject ToastService
@@ -34,7 +34,7 @@ export class LayoutComponent implements OnInit {
     try {
       // this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 5000 });
       // Subscribe to the sensor data channel
-      this.actionCableService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
+      this.sensorDataLiveService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
         const newSensor = new SensorInfo({
           date: _SharedModule.formatDateTimeLocal(data.dt),
           type: 'Alarm',

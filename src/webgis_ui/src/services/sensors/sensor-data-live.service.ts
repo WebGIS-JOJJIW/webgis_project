@@ -6,7 +6,7 @@ import { ToastService } from '../toast/toast.service';
 @Injectable({
     providedIn: 'root'  // This makes the service available globally
 })
-export class ActionCableService {
+export class SensorDataLiveService {
     private cable: any;
     private subscriptions: any = {};
     private retryTimeout: any;

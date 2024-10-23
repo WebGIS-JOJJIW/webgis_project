@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment.dev';
     providedIn: 'root'  // This makes the service available globally
 })
 
-export class SensorDataService{
+export class SensorDataHistService{
     constructor(private http: HttpClient){}
 
     getAllSensorEvents():Observable<any>{
