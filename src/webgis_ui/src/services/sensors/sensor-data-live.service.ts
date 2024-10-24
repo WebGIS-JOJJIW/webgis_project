@@ -17,7 +17,7 @@ export class SensorDataLiveService {
     }
 
     public subscribeToChannel(channelName: string, params: any, receivedCallback: (data: any) => void): void {
-        if (!this.subscriptions[channelName]) {            
+        if (!this.subscriptions[channelName]) {
             this.createSubscription(channelName, params, receivedCallback);
         }
     }
@@ -30,21 +30,25 @@ export class SensorDataLiveService {
                 if (this.retryTimeout) {
                     clearTimeout(this.retryTimeout);  // Clear any retry timer if connected successfully
                     this.sharedService.setIsReconnect(false);
+                    this.toastService.show('Connecting to the channel successfully', {
+                        classname: 'bg-success text-light',
+                        delay: environment.reconnectTimeout * 1000
+                    });
                 }
             },
             disconnected: () => {
                 console.log(`Disconnected from ${channelName} channel`);
                 this.toastService.show(`Disconnected from ${channelName} channel`, {
                     classname: 'bg-danger text-light',
-                    delay: environment.reconnectTimeout*1000
+                    delay: environment.reconnectTimeout * 1000
                 });
                 this.retrySubscription(channelName, params, receivedCallback);  // Attempt to reconnect
             },
             rejected: () => {
                 console.log(`Connection to ${channelName} channel rejected`);
-                this.toastService.show('Error connecting to the channel', {
+                this.toastService.show('Connection to the channel rejected', {
                     classname: 'bg-danger text-light',
-                    delay: environment.reconnectTimeout*1000
+                    delay: environment.reconnectTimeout * 1000
                 });
                 this.retrySubscription(channelName, params, receivedCallback);  // Attempt to reconnect
             }
@@ -56,7 +60,7 @@ export class SensorDataLiveService {
         this.retryTimeout = setTimeout(() => {
             this.unsubscribeFromChannel(channelName);  // Clear any existing subscription before retrying
             this.createSubscription(channelName, params, receivedCallback);  // Try to reconnect
-        }, 10*1000);  // Retry after 10 seconds
+        }, 10 * 1000);  // Retry after 10 seconds
     }
 
     public unsubscribeFromChannel(channelName: string): void {
@@ -66,4 +70,25 @@ export class SensorDataLiveService {
             console.log(`Unsubscribed from ${channelName} channel`);
         }
     }
+
+
+    //for testing purposes
+    public testConnectionFail(channelName: string): void {
+        if (this.subscriptions[channelName]) {
+            console.log(`Simulating connection failure for ${channelName}...`);
+            this.subscriptions[channelName].rejected();
+        } else {
+            console.log(`No subscription found for ${channelName} to simulate failure.`);
+        }
+    }
+
+    public testDisconnect(channelName: string): void {
+        if (this.subscriptions[channelName]) {
+            console.log(`Simulating disconnection for ${channelName}...`);
+            this.subscriptions[channelName].disconnected();
+        } else {
+            console.log(`No subscription found for ${channelName} to simulate disconnection.`);
+        }
+    }
+
 }

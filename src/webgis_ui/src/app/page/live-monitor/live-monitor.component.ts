@@ -4,8 +4,8 @@ import { MapComponent } from '../../_shared/map/map.component';
 import { environment } from '../../../environments/environment';
 import { GeoJSONSource } from 'maplibre-gl';
 import { SharedService } from '../../_shared/services/shared.service';
-import { SensorDataLiveService } from '../../../services/sensors/sensor-data-live.service';
 import { ToastService } from '../../../services/toast/toast.service';
+import { SensorDataLiveService } from '../../../services/sensors/sensor-data-live.service';
 
 @Component({
   selector: 'app-live-monitor',

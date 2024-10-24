@@ -20,6 +20,7 @@ import { ImagesDetailsComponent } from './navigation/sensor-info/images-details/
 import { HttpClientModule } from '@angular/common/http';
 import { LoadingComponent } from './_shared/loading/loading.component';
 import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
+import { ReconnectCheckComponent } from './page/reconnect-check/reconnect-check.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { NgbToastModule } from '@ng-bootstrap/ng-bootstrap';
     HeaderComponent,
     FooterComponent,
     ImagesDetailsComponent,
-    LoadingComponent
+    LoadingComponent,
+    ReconnectCheckComponent
   ],
   imports: [
     BrowserModule,
