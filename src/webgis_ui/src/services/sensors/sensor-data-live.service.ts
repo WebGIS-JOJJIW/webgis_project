@@ -5,7 +5,7 @@ import { ToastService } from '../toast/toast.service';
 import { SharedService } from '../../app/_shared/services/shared.service';
 
 @Injectable({
-    providedIn: 'root'  // This makes the service available globally
+    providedIn: 'root'  
 })
 export class SensorDataLiveService {
     private cable: any;
