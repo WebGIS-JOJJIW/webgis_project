@@ -24,7 +24,7 @@ export class LayoutComponent implements OnInit {
     { header: 'รายละเอียด', field: 'details' }
   ];
   constructor(private sensorDataLiveService: SensorDataLiveService,
-    private sensorDataService: SensorDataHistService,
+    private sensorDataHistService: SensorDataHistService,
     private cdr: ChangeDetectorRef, // Inject ChangeDetectorRef
     private _sharedService: SharedService,
     public toastService: ToastService  // Inject ToastService
@@ -33,7 +33,7 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     try {
       this.subscribeSetup()
-      this.getEventData();
+      this.getHistoricalEventData();
       
     } catch (err) {
       // Catch any other errors
@@ -46,7 +46,7 @@ export class LayoutComponent implements OnInit {
   subscribeSetup(){
     this._sharedService.currentIsReconnect.subscribe(x => {
       if(x){
-        this.getEventData();
+        this.getHistoricalEventData();
         this._sharedService.resetIsReconnect();
       }
     });
@@ -75,9 +75,9 @@ export class LayoutComponent implements OnInit {
     this._sharedService.currentIsLoading.subscribe(x => this.isLoading = x);
   }
 
-  getEventData(){
+  getHistoricalEventData(){
     // Get all sensor events from the service
-    this.sensorDataService.getAllSensorEvents().subscribe({
+    this.sensorDataHistService.getAllSensorEvents().subscribe({
       next: res => {
         this.updateEventsData(res);
         // Manually trigger change detection to update the view
