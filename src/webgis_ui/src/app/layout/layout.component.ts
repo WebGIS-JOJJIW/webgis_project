@@ -32,49 +32,63 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     try {
-      // this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 5000 });
-      // Subscribe to the sensor data channel
-      this.sensorDataLiveService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
-        const newSensor = new SensorInfo({
-          date: _SharedModule.formatDateTimeLocal(data.dt),
-          type: 'Alarm',
-          system: 'SENSOR',
-          details: `${data.sensor_name.toUpperCase()} -  ${data.value}`,
-          imgValue: data.value,
-          name: data.sensor_name.toUpperCase(),
-          img: [''],
-          event_id: data.event_id,
-          detect: this.detectType(data),
-          recentEventCount: 0,
-        });
-
-        this.eventsData = [newSensor, ...this.eventsData].sort((a, b) => {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        });
-
-        this.filterSensorData();
-      });
-
-      // Get all sensor events from the service
-      this.sensorDataService.getAllSensorEvents().subscribe({
-        next: res => {
-          this.updateEventsData(res);
-          // Manually trigger change detection to update the view
-          this.cdr.detectChanges();
-        },
-        error: err => {
-          // Handle errors here
-          console.error('Error fetching sensor events', err);
-          this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 2000 });
-        }
-      });
-
-      this._sharedService.currentIsLoading.subscribe(x => this.isLoading = x);
+      this.subscribeSetup()
+      this.getEventData();
+      
     } catch (err) {
       // Catch any other errors
       console.error('Unexpected error:', err);
       this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 2000 });
     }
+  }
+
+
+  subscribeSetup(){
+    this._sharedService.currentIsReconnect.subscribe(x => {
+      if(x){
+        this.getEventData();
+        this._sharedService.resetIsReconnect();
+      }
+    });
+
+    this.sensorDataLiveService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
+      const newSensor = new SensorInfo({
+        date: _SharedModule.formatDateTimeLocal(data.dt),
+        type: 'Alarm',
+        system: 'SENSOR',
+        details: `${data.sensor_name.toUpperCase()} -  ${data.value}`,
+        imgValue: data.value,
+        name: data.sensor_name.toUpperCase(),
+        img: [''],
+        event_id: data.event_id,
+        detect: this.detectType(data),
+        recentEventCount: 0,
+      });
+
+      this.eventsData = [newSensor, ...this.eventsData].sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
+
+      this.filterSensorData();
+    });
+
+    this._sharedService.currentIsLoading.subscribe(x => this.isLoading = x);
+  }
+
+  getEventData(){
+    // Get all sensor events from the service
+    this.sensorDataService.getAllSensorEvents().subscribe({
+      next: res => {
+        this.updateEventsData(res);
+        // Manually trigger change detection to update the view
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        // Handle errors here
+        console.error('Error fetching sensor events', err);
+        this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 2000 });
+      }
+    });
   }
 
   updateEventsData(data: any[]): void {

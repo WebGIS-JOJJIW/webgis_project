@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as ActionCable from '@rails/actioncable';
 import { environment } from '../../environments/environment';
 import { ToastService } from '../toast/toast.service';
+import { SharedService } from '../../app/_shared/services/shared.service';
 
 @Injectable({
     providedIn: 'root'  // This makes the service available globally
@@ -11,7 +12,7 @@ export class SensorDataLiveService {
     private subscriptions: any = {};
     private retryTimeout: any;
 
-    constructor(private toastService: ToastService) {
+    constructor(private toastService: ToastService, private sharedService: SharedService) {
         this.cable = ActionCable.createConsumer(`${environment.cable}`);
     }
 
@@ -28,6 +29,7 @@ export class SensorDataLiveService {
                 console.log(`Connected to ${channelName} channel`);
                 if (this.retryTimeout) {
                     clearTimeout(this.retryTimeout);  // Clear any retry timer if connected successfully
+                    this.sharedService.setIsReconnect(false);
                 }
             },
             disconnected: () => {

@@ -36,4 +36,15 @@ export class SharedService {
   resetIsStyleChanged(){
     this.isStyleChanged.next(false);
   }
+
+
+  //IsReconnect for reconnect to the channel
+  private isReconnect = new BehaviorSubject<boolean>(false);
+  currentIsReconnect = this.isReconnect.asObservable();
+  setIsReconnect(res:boolean){
+    this.isReconnect.next(res);
+  }
+  resetIsReconnect(){
+    this.isReconnect.next(false);
+  }
 }
