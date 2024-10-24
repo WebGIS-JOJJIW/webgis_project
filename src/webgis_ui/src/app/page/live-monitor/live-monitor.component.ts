@@ -12,17 +12,14 @@ import { SensorDataLiveService } from '../../../services/sensors/sensor-data-liv
   templateUrl: './live-monitor.component.html',
   styleUrl: './live-monitor.component.scss'
 })
-export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
+export class LiveMonitorComponent implements OnInit, AfterViewInit {
   // isLoading: boolean = true; // Initially set to true to show the loading spinner
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   constructor(private GeoDataService: GeoserverDataService, private _sharedService: SharedService, 
-    private sensorDataLiveService:SensorDataLiveService, private toastService: ToastService) { }
+    private toastService: ToastService) { }
   ngOnInit(): void {
     this._sharedService.setIsLoading(true);
-    this.sensorDataLiveService.subscribeToChannel('SensorDataChannel', null , (data: any) => {
-      // console.log('Received:', data); // Handle incoming real-time data here
-    });
 
     this._sharedService.currentIsStyleChanged.subscribe((styleChanged)=>{
       if(styleChanged){
@@ -255,9 +252,4 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
     })
   }
   //#endregion
-
-
-  ngOnDestroy(): void {
-    this.sensorDataLiveService.unsubscribeFromChannel('SensorDataChannel');
-  }
 }
