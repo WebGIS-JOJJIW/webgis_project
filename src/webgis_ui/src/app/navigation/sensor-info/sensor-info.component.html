@@ -20,7 +20,7 @@
   </div> -->
 </div>
 
-<div *ngFor="let item of data">
+<div class="" *ngFor="let item of data">
   <div class="sensor-card" *ngIf="!isSensorDetails">
     <div class="sensor-header">
       <strong (click)="onClick(item.name)">{{ item.name }}</strong>
@@ -46,7 +46,6 @@
         ><span class="category">เหตุการณ์ใน 1 ชั่วโมง</span>
       </div>
     </div>
-    
   </div>
 </div>
 

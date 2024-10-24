@@ -15,6 +15,5 @@ export class _SharedModule{
         return formattedDate;
     }
 
-
     public static vehicle_type = ['CAR', 'CARS', 'BUS', 'MOTOCYCLE', 'BICYCLE']
 }

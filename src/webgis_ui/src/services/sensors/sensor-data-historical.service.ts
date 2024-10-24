@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.dev';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
     providedIn: 'root'  // This makes the service available globally
 })
 
-export class SensorDataService{
+export class SensorDataHistService{
     constructor(private http: HttpClient){}
 
     getAllSensorEvents():Observable<any>{

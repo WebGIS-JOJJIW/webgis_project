@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GeoserverDataService } from '../../../services/geoserver/geoserver-data.service';
 import { MapComponent } from '../../_shared/map/map.component';
-import { environment } from '../../../environments/environment.dev';
+import { environment } from '../../../environments/environment';
 import { GeoJSONSource } from 'maplibre-gl';
 import { SharedService } from '../../_shared/services/shared.service';
-import { ActionCableService } from '../../../services/sensors/actioncable.service';
+import { ToastService } from '../../../services/toast/toast.service';
+import { SensorDataLiveService } from '../../../services/sensors/sensor-data-live.service';
 
 @Component({
   selector: 'app-live-monitor',
@@ -15,10 +16,11 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
   // isLoading: boolean = true; // Initially set to true to show the loading spinner
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
-  constructor(private GeoDataService: GeoserverDataService, private _sharedService: SharedService, private actionCableService:ActionCableService) { }
+  constructor(private GeoDataService: GeoserverDataService, private _sharedService: SharedService, 
+    private sensorDataLiveService:SensorDataLiveService, private toastService: ToastService) { }
   ngOnInit(): void {
     this._sharedService.setIsLoading(true);
-    this.actionCableService.subscribeToChannel('SensorDataChannel', null , (data: any) => {
+    this.sensorDataLiveService.subscribeToChannel('SensorDataChannel', null , (data: any) => {
       // console.log('Received:', data); // Handle incoming real-time data here
     });
 
@@ -42,7 +44,8 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
   //#region Add POI on Maps 
   addPOILayer(): void {
     const layerId = 'poi_marker'
-    this.GeoDataService.getFeatures('sensors').subscribe(res => {
+    this.GeoDataService.getFeatures('sensors').subscribe({
+      next: (res) => {
       // console.log(res);
 
       // // Add a new GeoJSON source with clustering enabled
@@ -152,6 +155,10 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
           }, 200);  
         }
       });
+    },
+    error : (err)=>{
+        this.toastService.show('Connection geoserver error', { classname: 'bg-danger text-light', delay: 2000 });
+      }
     });
     
   }
@@ -193,7 +200,7 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
 
   getRasterLayerBbox(name: string): void {
     this.GeoDataService.getLayerOptions(`${environment.geosever}/geoserver/rest/workspaces/gis/coveragestores/${name}/coverages/${name}.json`)
-      .subscribe(res => {
+      .subscribe({next:(res) => {
         const bbox = [
           res.coverage.nativeBoundingBox.minx,
           res.coverage.nativeBoundingBox.miny,
@@ -203,7 +210,10 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
 
         // Set the road layer on the map using the BBOX
         this.setRoadOnMap(bbox);
-      });
+      },
+      error:(err)=>{
+        this.toastService.show('Connection geoserver error', { classname: 'bg-danger text-light', delay: 2000 });
+      }});
   }
 
   setRoadOnMap(bbox: string): void {
@@ -248,6 +258,6 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.actionCableService.unsubscribeFromChannel('SensorDataChannel');
+    this.sensorDataLiveService.unsubscribeFromChannel('SensorDataChannel');
   }
 }

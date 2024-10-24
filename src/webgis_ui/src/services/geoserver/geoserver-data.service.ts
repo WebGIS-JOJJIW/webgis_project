@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from "../../environments/environment.dev";
+import { environment } from "../../environments/environment";
 import { map, Observable } from "rxjs";
 import { Injectable } from '@angular/core';
 
