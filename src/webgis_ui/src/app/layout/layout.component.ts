@@ -109,12 +109,9 @@ export class LayoutComponent implements OnInit {
       return environment.typeImg.some((type) => x.details.endsWith(type));
     });
 
-
-    // Create a Set to store unique sensor IDs
     const uniqueSensors = new Set();
 
     this.eventFilter = this.eventFilter.filter((ele: any) => {
-      // Check if the sensor is already in the Set based on a unique property, like sensor_id
       if (!uniqueSensors.has(ele.name)) {
         // Add the sensor_id to the Set if it's unique
         uniqueSensors.add(ele.name);
@@ -123,7 +120,6 @@ export class LayoutComponent implements OnInit {
       return false;  // Remove the element from the filtered array if sensor_id is not unique
     });
 
-    // After filtering unique sensors, you can still process the images
     this.eventFilter.forEach((ele: any) => {
 
       const [datePart, timePart] = ele.date.split(' ');
@@ -132,19 +128,17 @@ export class LayoutComponent implements OnInit {
 
       const oneHourAgo = new Date(year, month - 1, day, hours-1, minutes, seconds);
       ele.img = eventImage
-        .filter((x: any) => x.event_id === ele.event_id)  // Filter based on event_id
-        .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`);  // Extract imgValue from each filtered object
+        .filter((x: any) => x.event_id === ele.event_id)  
+        .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`);  
 
       const recentEventCount = this.eventsData
-        .filter((x: any) => x.event_id === ele.event_id && new Date(x.date) > oneHourAgo) // Filter by event_id and time
-        .length; // Get the count of filtered events
+        .filter((x: any) => x.event_id === ele.event_id && new Date(x.date) > oneHourAgo) 
+        .length;
 
-      // You can store the count in the ele object if needed
-      ele.recentEventCount = recentEventCount; // Add the count to the element
+      ele.recentEventCount = recentEventCount;
     });
 
     this.eventFlterAll.forEach(ele => {
-      // Assuming ele.event_time is the timestamp of the event
       const [datePart, timePart] = ele.date.split(' ');
       const [day, month, year] = datePart.split('/').map(Number);
       const [hours, minutes, seconds] = timePart.split(':').map(Number);
@@ -155,12 +149,10 @@ export class LayoutComponent implements OnInit {
         .filter((x: any) => x.event_id === ele.event_id) // Filter based on event_id
         .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`); // Extract imgValue from each filtered object
 
-      // Count events that occurred within the last hour
       const recentEventCount = this.eventsData
-        .filter(x => new Date(x.date) > oneHourAgo && x.name === ele.name) // Filter by event_id and time
-        .length; // Get the count of filtered events
+        .filter(x => new Date(x.date) > oneHourAgo && x.name === ele.name) 
+        .length; 
 
-      // You can store the count in the ele object if needed
       ele.recentEventCount = recentEventCount; // Add the count to the element
     });
 
