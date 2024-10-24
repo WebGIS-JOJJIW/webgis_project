@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { GeoserverDataService } from '../../../services/geoserver/geoserver-data.service';
 import { MapComponent } from '../../_shared/map/map.component';
-import { environment } from '../../../environments/environment.dev';
+import { environment } from '../../../environments/environment';
 import { GeoJSONSource } from 'maplibre-gl';
 import { SharedService } from '../../_shared/services/shared.service';
-import { ActionCableService } from '../../../services/sensors/sensor-data-live.service';
+import { SensorDataLiveService } from '../../../services/sensors/sensor-data-live.service';
 import { ToastService } from '../../../services/toast/toast.service';
 
 @Component({
@@ -17,10 +17,10 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
   @ViewChild(MapComponent) mapComponent!: MapComponent;
 
   constructor(private GeoDataService: GeoserverDataService, private _sharedService: SharedService, 
-    private actionCableService:ActionCableService, private toastService: ToastService) { }
+    private sensorDataLiveService:SensorDataLiveService, private toastService: ToastService) { }
   ngOnInit(): void {
     this._sharedService.setIsLoading(true);
-    this.actionCableService.subscribeToChannel('SensorDataChannel', null , (data: any) => {
+    this.sensorDataLiveService.subscribeToChannel('SensorDataChannel', null , (data: any) => {
       // console.log('Received:', data); // Handle incoming real-time data here
     });
 
@@ -258,6 +258,6 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit,OnDestroy {
 
 
   ngOnDestroy(): void {
-    this.actionCableService.unsubscribeFromChannel('SensorDataChannel');
+    this.sensorDataLiveService.unsubscribeFromChannel('SensorDataChannel');
   }
 }

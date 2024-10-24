@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import * as ActionCable from '@rails/actioncable';
-import { environment } from '../../environments/environment.dev';
+import { environment } from '../../environments/environment';
 import { ToastService } from '../toast/toast.service';
 
 @Injectable({
     providedIn: 'root'  // This makes the service available globally
 })
-export class ActionCableService {
+export class SensorDataLiveService {
     private cable: any;
     private subscriptions: any = {};
     private retryTimeout: any;
