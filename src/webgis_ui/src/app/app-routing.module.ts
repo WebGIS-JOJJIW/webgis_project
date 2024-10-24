@@ -10,7 +10,6 @@ const routes: Routes = [
   { path: '**', redirectTo: 'live-monitor', pathMatch: 'full' },  // Fallback route
 ];
 
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]

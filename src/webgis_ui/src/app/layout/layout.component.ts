@@ -4,8 +4,8 @@ import { SensorDataService } from '../../services/sensors/sensor-data-historical
 import { environment } from '../../environments/environment.dev';
 import { _SharedModule } from '../_shared/_shared.module';
 import { SensorInfo } from '../../models/sensorInfo.model';
-import { SharedService } from '../_shared/services/shared.service';
-import { ToastService } from '../../services/toast/toast.service';
+import { SharedService } from '../_shared/services/shared.service'; //call service
+import { ToastService } from '../../services/toast/toast.service';  // alert message
 
 @Component({
   selector: 'app-layout',
@@ -32,8 +32,6 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     try {
-      // this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 5000 });
-      // Subscribe to the sensor data channel
       this.actionCableService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
         const newSensor = new SensorInfo({
           date: _SharedModule.formatDateTimeLocal(data.dt),
@@ -181,6 +179,5 @@ export class LayoutComponent implements OnInit {
   }
 
   onSearch(term: string) {
-    // console.log('Searching for:', term);
   }
 }

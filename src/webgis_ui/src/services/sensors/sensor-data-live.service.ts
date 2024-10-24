@@ -34,7 +34,7 @@ export class ActionCableService {
                 console.log(`Disconnected from ${channelName} channel`);
                 this.toastService.show(`Disconnected from ${channelName} channel`, {
                     classname: 'bg-danger text-light',
-                    delay: 10*1000
+                    delay: environment.reconnectTimeout*1000
                 });
                 this.retrySubscription(channelName, params, receivedCallback);  // Attempt to reconnect
             },
@@ -42,7 +42,7 @@ export class ActionCableService {
                 console.log(`Connection to ${channelName} channel rejected`);
                 this.toastService.show('Error connecting to the channel', {
                     classname: 'bg-danger text-light',
-                    delay: 10*1000
+                    delay: environment.reconnectTimeout*1000
                 });
                 this.retrySubscription(channelName, params, receivedCallback);  // Attempt to reconnect
             }
