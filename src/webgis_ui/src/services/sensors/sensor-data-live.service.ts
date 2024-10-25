@@ -10,6 +10,7 @@ import { SharedService } from '../../app/_shared/services/shared.service';
 export class SensorDataLiveService {
     private cable: any;
     private subscriptions: any = {};
+    private subscriptionSettings: any = {};
     private retryTimeout: any;
 
     constructor(private toastService: ToastService, private sharedService: SharedService) {
@@ -18,12 +19,17 @@ export class SensorDataLiveService {
 
     public subscribeToChannel(channelName: string, params: any, receivedCallback: (data: any) => void): void {
         if (!this.subscriptions[channelName]) {
+            this.subscriptionSettings[channelName] = {
+                receivedCallback: receivedCallback,
+                params: params
+            }
             this.createSubscription(channelName, params, receivedCallback);
         }
     }
 
     private createSubscription(channelName: string, params: any, receivedCallback: (data: any) => void): void {
         this.subscriptions[channelName] = this.cable.subscriptions.create({ channel: channelName, ...params }, {
+
             received: (data: any) => receivedCallback(data),
             connected: () => {
                 console.log(`Connected to ${channelName} channel`);
@@ -91,4 +97,13 @@ export class SensorDataLiveService {
         }
     }
 
+    public testUnsubscribe(channelName: string): void {
+        this.unsubscribeFromChannel(channelName);
+    }
+
+    public testSubscribe(channelName: string): void {
+        const params = this.subscriptionSettings['params'];
+        const receivedCallback = this.subscriptionSettings['receivedCallback'];
+        this.createSubscription(channelName, params, receivedCallback);
+    }
 }

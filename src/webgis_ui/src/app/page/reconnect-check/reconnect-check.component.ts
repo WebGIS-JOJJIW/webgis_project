@@ -20,6 +20,12 @@ export class ReconnectCheckComponent implements OnInit{
     this.sensorDataLiveService.testDisconnect('SensorDataChannel');
   }
 
+  testUnsubscribe() {
+    this.sensorDataLiveService.testUnsubscribe('SensorDataChannel');
+  }
 
+  testSubscribe() {
+    this.sensorDataLiveService.testSubscribe('SensorDataChannel');
+  }
 
 }
