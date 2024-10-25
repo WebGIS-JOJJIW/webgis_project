@@ -46,6 +46,8 @@ export class LayoutComponent implements OnInit {
   subscribeSetup(){
     this._sharedService.currentIsReconnect.subscribe(x => {
       if(x){
+        console.log('reconnect');
+        
         this.getHistoricalEventData();
         this._sharedService.resetIsReconnect();
       }
