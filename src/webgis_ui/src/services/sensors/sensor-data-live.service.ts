@@ -5,7 +5,7 @@ import { ToastService } from '../toast/toast.service';
 import { SharedService } from '../../app/_shared/services/shared.service';
 
 @Injectable({
-    providedIn: 'root'  
+    providedIn: 'root'
 })
 export class SensorDataLiveService {
     private cable: any;
@@ -77,12 +77,12 @@ export class SensorDataLiveService {
         }
     }
 
-
     //for testing purposes
     public testConnectionFail(channelName: string): void {
         if (this.subscriptions[channelName]) {
             console.log(`Simulating connection failure for ${channelName}...`);
             this.subscriptions[channelName].rejected();
+            this.unsubscribeFromChannel(channelName); // Explicitly remove the subscription
         } else {
             console.log(`No subscription found for ${channelName} to simulate failure.`);
         }
@@ -92,6 +92,7 @@ export class SensorDataLiveService {
         if (this.subscriptions[channelName]) {
             console.log(`Simulating disconnection for ${channelName}...`);
             this.subscriptions[channelName].disconnected();
+            this.unsubscribeFromChannel(channelName); // Explicitly remove the subscription
         } else {
             console.log(`No subscription found for ${channelName} to simulate disconnection.`);
         }
