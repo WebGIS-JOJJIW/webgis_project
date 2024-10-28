@@ -23,6 +23,8 @@ test('test live-monitor page elements and clicks', async ({ page }) => {
   await page.locator('#sidebar a').nth(2).click();
   await page.locator('#sidebar a').nth(3).click();
   await page.locator('#sidebar a').nth(4).click();
+
+  await checkPOIMarkerInteraction(page);
 });
 
 // Define the function to check if all required data is visible on the page
@@ -64,7 +66,6 @@ async function checkPageElements(page: Page) {
       console.error(`Failed to double-click on map: attempt ${i + 1}`, error);
     }
   }
-
   console.log('All required elements have been checked for visibility.');
 }
 
@@ -79,5 +80,29 @@ async function clickWhenReady(page: Page, selector: string) {
     console.log(`Clicked on element with selector: ${selector}`);
   } catch (error) {
     console.error(`Failed to click on element with selector: ${selector}`, error);
+  }
+}
+
+// New function to check interaction with a POI marker on the map
+async function checkPOIMarkerInteraction(page: Page) {
+  const markerSelector = 'poi_marker-unclustered'; // Adjust selector based on your marker's class or attributes
+  await page.waitForSelector(markerSelector, { timeout: 5000 }); // Wait for markers to load
+
+  const markers = await page.$$(markerSelector);
+  if (markers.length > 0) {
+    // Click on the first marker
+    await markers[0].click();
+    console.log('Clicked on the POI marker.');
+
+    // Wait for the expected details to appear (you can change the selector according to your implementation)
+    const detailElement = await page.locator('.sensor-detail'); // Change this to your actual detail selector
+    await expect(detailElement).toBeVisible();
+    console.log('Sensor detail element is visible.');
+
+    // Optionally, check the content of the detail view
+    const nameElement = await detailElement.locator('.sensor-name'); // Change according to your HTML structure
+    await expect(nameElement).toContainText('Expected Sensor Name'); // Change to the expected sensor name
+  } else {
+    console.error('No POI markers found on the map.');
   }
 }
