@@ -35,12 +35,12 @@ export class SensorDataLiveService {
                 console.log(`Connected to ${channelName} channel`);
                 if (this.retryTimeout) {
                     clearTimeout(this.retryTimeout);  // Clear any retry timer if connected successfully
-                    this.sharedService.setIsReconnect(true);
-                    this.toastService.show('Connecting to the channel successfully', {
-                        classname: 'bg-success text-light',
-                        delay: environment.reconnectTimeout * 1000
-                    });
                 }
+                this.sharedService.setIsReconnect(true);
+                this.toastService.show('Connecting to the channel successfully', {
+                    classname: 'bg-success text-light',
+                    delay: environment.reconnectTimeout * 1000
+                });
             },
             disconnected: () => {
                 console.log(`Disconnected from ${channelName} channel`);
