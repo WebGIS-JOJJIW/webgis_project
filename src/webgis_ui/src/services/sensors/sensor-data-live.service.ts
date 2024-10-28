@@ -103,8 +103,10 @@ export class SensorDataLiveService {
     }
 
     public testSubscribe(channelName: string): void {
-        const params = this.subscriptionSettings['params'];
-        const receivedCallback = this.subscriptionSettings['receivedCallback'];
-        this.createSubscription(channelName, params, receivedCallback);
+        if (!this.subscriptions[channelName]) {
+            const params = this.subscriptionSettings[channelName]['params'];
+            const receivedCallback = this.subscriptionSettings[channelName]['receivedCallback'];
+            this.createSubscription(channelName, params, receivedCallback);
+        }
     }
 }
