@@ -30,7 +30,6 @@ export class SharedTableComponent implements OnInit ,OnChanges{
       this.filteredData = this.data;  // Update filtered data when data changes
       this.cdr.detectChanges();
       // console.log(this.filteredData);
-      
     }
     
   }

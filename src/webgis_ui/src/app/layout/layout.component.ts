@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActionCableService } from '../../services/sensors/actioncable.service';
-import { SensorDataService } from '../../services/sensors/sensor-data.service';
-import { environment } from '../../environments/environment.dev';
+import { SensorDataLiveService } from '../../services/sensors/sensor-data-live.service';
+import { SensorDataHistService } from '../../services/sensors/sensor-data-historical.service';
+import { environment } from '../../environments/environment';
 import { _SharedModule } from '../_shared/_shared.module';
 import { SensorInfo } from '../../models/sensorInfo.model';
-import { SharedService } from '../_shared/services/shared.service';
+import { SharedService } from '../_shared/services/shared.service'; //call service
+import { ToastService } from '../../services/toast/toast.service';  // alert message
 
 @Component({
   selector: 'app-layout',
@@ -22,14 +23,36 @@ export class LayoutComponent implements OnInit {
     { header: 'ระบบ', field: 'system' },
     { header: 'รายละเอียด', field: 'details' }
   ];
-  constructor(private actionCableService: ActionCableService,
-    private sensorDataService: SensorDataService,
+  constructor(private sensorDataLiveService: SensorDataLiveService,
+    private sensorDataHistService: SensorDataHistService,
     private cdr: ChangeDetectorRef, // Inject ChangeDetectorRef
-    private _sharedSevice: SharedService
+    private _sharedService: SharedService,
+    public toastService: ToastService  // Inject ToastService
   ) { }
 
   ngOnInit(): void {
-    this.actionCableService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
+    try {
+      this.subscribeSetup()
+      this.getHistoricalEventData();
+      
+    } catch (err) {
+      // Catch any other errors
+      console.error('Unexpected error:', err);
+      this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 2000 });
+    }
+  }
+
+
+  subscribeSetup(){
+    this._sharedService.currentIsReconnect.subscribe(x => {
+      if(x){
+        // console.log('reconnect');
+        this.getHistoricalEventData();
+        this._sharedService.resetIsReconnect();
+      }
+    });
+
+    this.sensorDataLiveService.subscribeToChannel('SensorDataChannel', null, (data: any) => {
       const newSensor = new SensorInfo({
         date: _SharedModule.formatDateTimeLocal(data.dt),
         type: 'Alarm',
@@ -41,7 +64,7 @@ export class LayoutComponent implements OnInit {
         event_id: data.event_id,
         detect: this.detectType(data),
         recentEventCount: 0,
-      })
+      });
 
       this.eventsData = [newSensor, ...this.eventsData].sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -50,13 +73,23 @@ export class LayoutComponent implements OnInit {
       this.filterSensorData();
     });
 
-    this.sensorDataService.getAllSensorEvents().subscribe(res => {
-      this.updateEventsData(res);
-      // Manually trigger change detection to update the view
-      this.cdr.detectChanges();
-    })
+    this._sharedService.currentIsLoading.subscribe(x => this.isLoading = x);
+  }
 
-    this._sharedSevice.currentIsLoading.subscribe(x => this.isLoading = x);
+  getHistoricalEventData(){
+    // Get all sensor events from the service
+    this.sensorDataHistService.getAllSensorEvents().subscribe({
+      next: res => {
+        this.updateEventsData(res);
+        // Manually trigger change detection to update the view
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        // Handle errors here
+        console.error('Error fetching sensor events', err);
+        this.toastService.show('System error for now', { classname: 'bg-danger text-light', delay: 2000 });
+      }
+    });
   }
 
   updateEventsData(data: any[]): void {
@@ -83,22 +116,17 @@ export class LayoutComponent implements OnInit {
 
   filterSensorData() {
     this.eventFilter = this.eventsData.filter((x: any) => {
-      // Exclude events where 'details' ends with any of the image types
       return !environment.typeImg.some((type) => x.details.endsWith(type));
     });
 
     this.eventFlterAll = this.eventFilter;
     const eventImage = this.eventsData.filter((x: any) => {
-      // Exclude events where 'details' ends with any of the image types
       return environment.typeImg.some((type) => x.details.endsWith(type));
     });
 
-
-    // Create a Set to store unique sensor IDs
     const uniqueSensors = new Set();
 
     this.eventFilter = this.eventFilter.filter((ele: any) => {
-      // Check if the sensor is already in the Set based on a unique property, like sensor_id
       if (!uniqueSensors.has(ele.name)) {
         // Add the sensor_id to the Set if it's unique
         uniqueSensors.add(ele.name);
@@ -107,7 +135,6 @@ export class LayoutComponent implements OnInit {
       return false;  // Remove the element from the filtered array if sensor_id is not unique
     });
 
-    // After filtering unique sensors, you can still process the images
     this.eventFilter.forEach((ele: any) => {
 
       const [datePart, timePart] = ele.date.split(' ');
@@ -116,19 +143,17 @@ export class LayoutComponent implements OnInit {
 
       const oneHourAgo = new Date(year, month - 1, day, hours-1, minutes, seconds);
       ele.img = eventImage
-        .filter((x: any) => x.event_id === ele.event_id)  // Filter based on event_id
-        .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`);  // Extract imgValue from each filtered object
+        .filter((x: any) => x.event_id === ele.event_id)  
+        .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`);  
 
       const recentEventCount = this.eventsData
-        .filter((x: any) => x.event_id === ele.event_id && new Date(x.date) > oneHourAgo) // Filter by event_id and time
-        .length; // Get the count of filtered events
+        .filter((x: any) => x.event_id === ele.event_id && new Date(x.date) > oneHourAgo) 
+        .length;
 
-      // You can store the count in the ele object if needed
-      ele.recentEventCount = recentEventCount; // Add the count to the element
+      ele.recentEventCount = recentEventCount;
     });
 
     this.eventFlterAll.forEach(ele => {
-      // Assuming ele.event_time is the timestamp of the event
       const [datePart, timePart] = ele.date.split(' ');
       const [day, month, year] = datePart.split('/').map(Number);
       const [hours, minutes, seconds] = timePart.split(':').map(Number);
@@ -139,17 +164,12 @@ export class LayoutComponent implements OnInit {
         .filter((x: any) => x.event_id === ele.event_id) // Filter based on event_id
         .map((x: any) => `${environment.api.replace(':3001/', '')}/${x.imgValue.replace('.jpgg', '.jpg')}`); // Extract imgValue from each filtered object
 
-      // Count events that occurred within the last hour
       const recentEventCount = this.eventsData
-        .filter(x => new Date(x.date) > oneHourAgo && x.name === ele.name) // Filter by event_id and time
-        .length; // Get the count of filtered events
+        .filter(x => new Date(x.date) > oneHourAgo && x.name === ele.name) 
+        .length; 
 
-      // You can store the count in the ele object if needed
       ele.recentEventCount = recentEventCount; // Add the count to the element
     });
-
-
-    // console.log('this.eventFilter', this.eventFilter);
 
   }
 
@@ -168,6 +188,5 @@ export class LayoutComponent implements OnInit {
   }
 
   onSearch(term: string) {
-    // console.log('Searching for:', term);
   }
 }
