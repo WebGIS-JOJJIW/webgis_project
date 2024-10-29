@@ -14,20 +14,18 @@ test('test live-monitor page elements and clicks', async ({ page }) => {
   await clickWhenReady(page, 'text=Live Monitoring');
   await clickWhenReady(page, 'text=Drone Patrol');
   await clickWhenReady(page, 'a.nav-link:has-text("Summary")');
-  await page.locator('div:nth-child(5) > .navbar-nav > li > .nav-link').first().click();
-  await page.locator('div:nth-child(5) > .navbar-nav > li:nth-child(2) > .nav-link').click();
-  await page.locator('div:nth-child(5) > .navbar-nav > li:nth-child(3) > .nav-link').click();
-  await page.locator('li:nth-child(4) > .nav-link').first().click();
-  await page.locator('#sidebar a').first().click();
   await page.locator('#sidebar a').nth(1).click();
   await page.locator('#sidebar a').nth(2).click();
   await page.locator('#sidebar a').nth(3).click();
   await page.locator('#sidebar a').nth(4).click();
+  await page.locator('div:nth-child(5) > .navbar-nav > li:nth-child(2) > .nav-link').click();
+  await page.locator('div:nth-child(5) > .navbar-nav > li:nth-child(3) > .nav-link').click();
+  await page.locator('li:nth-child(4) > .nav-link').first().click();
 
   await checkPOIMarkerInteraction(page);
 });
 
-// Define the function to check if all required data is visible on the page
+// Define the function to check if all required data is visible on the page 
 async function checkPageElements(page: Page) {
   // Check for the page title
   await expect(page).toHaveTitle(/Web GIS/);
