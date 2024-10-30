@@ -13,7 +13,7 @@ test('test live-monitor page elements and clicks', async ({ page }) => {
   // Perform clicks on navigation elements
   await checkButtonElements(page);
 
-  
+  // Unit tests map component 
   await checkMapElements(page);
 });
 
@@ -114,37 +114,11 @@ async function checkTitleElements(page: Page) {
 // Helper function to click a button when it's ready
 async function clickWhenReady(page: Page, selector: string) {
   try {
-    // Wait for the selector to be visible
-    // await page.waitForSelector(selector, { state: 'visible' });
 
     // Perform the click action
     await page.locator(selector).click();
     console.log(`Clicked on element with selector: ${selector}`);
   } catch (error) {
     console.error(`Failed to click on element with selector: ${selector}`, error);
-  }
-}
-
-// New function to check interaction with a POI marker on the map
-async function checkPOIMarkerInteraction(page: Page) {
-  const markerSelector = 'poi_marker-unclustered'; // Adjust selector based on your marker's class or attributes
-  await page.waitForSelector(markerSelector, { timeout: 5000 }); // Wait for markers to load
-
-  const markers = await page.$$(markerSelector);
-  if (markers.length > 0) {
-    // Click on the first marker
-    await markers[0].click();
-    console.log('Clicked on the POI marker.');
-
-    // Wait for the expected details to appear (you can change the selector according to your implementation)
-    const detailElement = await page.locator('.sensor-detail'); // Change this to your actual detail selector
-    await expect(detailElement).toBeVisible();
-    console.log('Sensor detail element is visible.');
-
-    // Optionally, check the content of the detail view
-    const nameElement = await detailElement.locator('.sensor-name'); // Change according to your HTML structure
-    await expect(nameElement).toContainText('Expected Sensor Name'); // Change to the expected sensor name
-  } else {
-    console.error('No POI markers found on the map.');
   }
 }
