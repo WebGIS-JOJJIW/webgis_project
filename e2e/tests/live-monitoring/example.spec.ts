@@ -8,9 +8,16 @@ test('test live-monitor page elements and clicks', async ({ page }) => {
   await page.goto('http://localhost:4200/live-monitor');
 
   // Call the function to verify if all required elements are visible
-  await checkPageElements(page);
+  await checkTitleElements(page);
 
   // Perform clicks on navigation elements
+  await checkButtonElements(page);
+
+  
+  await checkMapElements(page);
+});
+
+async function checkButtonElements(page: Page) {
   await clickWhenReady(page, 'text=Live Monitoring');
   await clickWhenReady(page, 'text=Drone Patrol');
   await clickWhenReady(page, 'a.nav-link:has-text("Summary")');
@@ -22,11 +29,65 @@ test('test live-monitor page elements and clicks', async ({ page }) => {
   await page.locator('div:nth-child(5) > .navbar-nav > li:nth-child(3) > .nav-link').click();
   await page.locator('li:nth-child(4) > .nav-link').first().click();
 
-  // await checkPOIMarkerInteraction(page);
-});
+}
+
+async function checkMapElements(page: Page) {
+  
+  // await page.getByLabel('Zoom out').click();
+
+  for (var i = 0; i< 2; i++ ){
+    await page.getByLabel('Zoom out').click();
+    await page.waitForTimeout(1000);
+    await page.getByLabel('Zoom out').click();
+    await page.waitForTimeout(1000);
+    await page.getByLabel('Map').click({
+      position: {
+        x: 682,
+        y: 277
+      }
+    });
+    const sensor1Locator = page.getByText('ข้อมูลเซนเซอร์ (sensor1)');
+    await sensor1Locator.waitFor({ timeout: 3000 });
+    await sensor1Locator.click();
+;
+  
+    await page.waitForTimeout(2000);
+    await page.getByLabel('Map').click({
+      position: {
+        x: 624,
+        y: 435
+      }
+    });
+    const sensor2Locator = page.getByText('ข้อมูลเซนเซอร์ (sensor2)');
+    await sensor2Locator.waitFor({ timeout: 3000 });
+    await sensor2Locator.click();
+    await page.waitForTimeout(1000);
+
+    // await page.getByLabel('Zoom in').click();
+    await page.getByLabel('Zoom in').click();
+    await page.waitForTimeout(1000);
+    await page.getByLabel('Zoom in').click();
+    await page.waitForTimeout(1000);
+    await page.locator('#map').getByRole('img').click();
+    await page.waitForTimeout(2000);
+  }
+
+  await page.getByLabel('Map').click({
+    position: {
+      x: 604,
+      y: 229
+    }
+  });
+
+  await page.mouse.move(600, 300);
+  await page.mouse.down();
+  await page.mouse.move(1200, 450, {steps: 50});  // <-- Change here
+  await page.mouse.up();
+  await page.waitForTimeout(2000);
+}
 
 // Define the function to check if all required data is visible on the page 
-async function checkPageElements(page: Page) {
+async function checkTitleElements(page: Page) {
   // Check for the page title
   await expect(page).toHaveTitle(/Web GIS/);
 
@@ -36,11 +97,7 @@ async function checkPageElements(page: Page) {
     'img[alt="Map Editor"]',                  // Image with alt text "Map Editor"
     'text=Live Monitoring',                   // Text "Live Monitoring"
     'text=Drone Patrol',                      // Text "Drone Patrol"
-    // 'a.nav-link:has-text("Summary")',          // Link with text "Summary"
-    // 'div:nth-child(5) > .navbar-nav > li > .nav-link',  // Navbar link
     'text=ข้อมูลเซนเซอร์',                    // Thai text for "Sensor Information"
-    // '#sidebar a',                             // Sidebar links
-    // 'text=ทั้งหมด Alarm Infoวันที่ประเภทระบบรายละเอียด2024-06-01 10:14:' // Alarm Info text
   ];
 
   for (const selector of elementsToCheck) {
@@ -49,19 +106,6 @@ async function checkPageElements(page: Page) {
       console.log(`Element with selector: ${selector} is visible.`);
     } catch (error) {
       console.error(`Element with selector: ${selector} is not visible.`, error);
-    }
-  }
-
-  const mapElement = await page.locator('#map'); // Adjust the selector to your map element
-
-  // Perform a double-click on the map three times
-  for (let i = 0; i < 3; i++) {
-    try {
-      await mapElement.dblclick(); // Simulate double-click
-      await page.waitForTimeout(1000); // Optional: wait 1 second between each double-click
-      console.log(`Double-clicked on map: attempt ${i + 1}`);
-    } catch (error) {
-      console.error(`Failed to double-click on map: attempt ${i + 1}`, error);
     }
   }
   console.log('All required elements have been checked for visibility.');
