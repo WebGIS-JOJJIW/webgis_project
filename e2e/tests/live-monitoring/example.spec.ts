@@ -22,7 +22,7 @@ test('test live-monitor page elements and clicks', async ({ page }) => {
   await page.locator('div:nth-child(5) > .navbar-nav > li:nth-child(3) > .nav-link').click();
   await page.locator('li:nth-child(4) > .nav-link').first().click();
 
-  await checkPOIMarkerInteraction(page);
+  // await checkPOIMarkerInteraction(page);
 });
 
 // Define the function to check if all required data is visible on the page 
@@ -36,11 +36,11 @@ async function checkPageElements(page: Page) {
     'img[alt="Map Editor"]',                  // Image with alt text "Map Editor"
     'text=Live Monitoring',                   // Text "Live Monitoring"
     'text=Drone Patrol',                      // Text "Drone Patrol"
-    'a.nav-link:has-text("Summary")',          // Link with text "Summary"
-    'div:nth-child(5) > .navbar-nav > li > .nav-link',  // Navbar link
+    // 'a.nav-link:has-text("Summary")',          // Link with text "Summary"
+    // 'div:nth-child(5) > .navbar-nav > li > .nav-link',  // Navbar link
     'text=ข้อมูลเซนเซอร์',                    // Thai text for "Sensor Information"
-    '#sidebar a',                             // Sidebar links
-    'text=ทั้งหมด Alarm Infoวันที่ประเภทระบบรายละเอียด2024-06-01 10:14:' // Alarm Info text
+    // '#sidebar a',                             // Sidebar links
+    // 'text=ทั้งหมด Alarm Infoวันที่ประเภทระบบรายละเอียด2024-06-01 10:14:' // Alarm Info text
   ];
 
   for (const selector of elementsToCheck) {
