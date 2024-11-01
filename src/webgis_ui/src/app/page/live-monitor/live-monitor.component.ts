@@ -213,43 +213,115 @@ export class LiveMonitorComponent implements OnInit, AfterViewInit {
       }});
   }
 
-  setRoadOnMap(bbox: string): void {
-    // console.log('road');
+  //old code 
+  // setRoadOnMap(bbox: string): void {
+  //   // console.log('road');
 
+  //   const roadsSourceId = 'thailand-roads';
+  //   const roadLayerId = 'roads-layer';
+  //   const roadsUrl = `http://138.197.163.159:8080/geoserver/gis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=gis:thailand_road&BBOX=${bbox}&outputFormat=application/json`;
+
+  //   const roadSource: maplibregl.SourceSpecification = {
+  //     type: 'geojson',
+  //     data: roadsUrl
+  //   };
+
+  //   const roadLayer: maplibregl.LayerSpecification = {
+  //     id: roadLayerId,
+  //     type: 'line',
+  //     source: roadsSourceId,
+  //     paint: {
+  //       'line-color': 'rgba(255, 255, 255, 0.7)',
+  //       'line-width': 2,
+  //     }
+  //   };
+  //   if (this.mapComponent.map.getZoom()) {
+  //     if (this.mapComponent.map.getZoom() > 11) {
+  //       this.mapComponent.addLayer(roadLayer, roadSource, roadsSourceId);
+  //     }
+  //   }
+
+  //   this.mapComponent.map.on('zoomend', () => {
+  //     // Add road layer to the map
+  //     const zoomLevel = this.mapComponent.map.getZoom();
+  //     if (zoomLevel > 11) {
+  //       // console.log(zoomLevel);
+  //       this.mapComponent.addLayer(roadLayer, roadSource, roadsSourceId);
+  //     } else {
+  //       this.mapComponent.removeLayer(roadLayerId, roadsSourceId);
+  //     }
+  //   })
+  // }
+
+  //set name to roads
+  setRoadOnMap(bbox: string): void {
     const roadsSourceId = 'thailand-roads';
     const roadLayerId = 'roads-layer';
+    const roadLabelLayerId = 'roads-label-layer';
     const roadsUrl = `http://138.197.163.159:8080/geoserver/gis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=gis:thailand_road&BBOX=${bbox}&outputFormat=application/json`;
 
-    const roadSource: maplibregl.SourceSpecification = {
-      type: 'geojson',
-      data: roadsUrl
-    };
+    // Fetch the data and ensure UTF-8 encoding
+    fetch(roadsUrl)
+        .then(response => response.json())
+        .then(data => {
+            data.features.forEach((feature: any) => {
+                // Decode the 'name' property if needed
+                if (feature.properties.name) {
+                    feature.properties.name = decodeURIComponent(escape(feature.properties.name));
+                }
+            });
 
-    const roadLayer: maplibregl.LayerSpecification = {
-      id: roadLayerId,
-      type: 'line',
-      source: roadsSourceId,
-      paint: {
-        'line-color': 'rgba(255, 255, 255, 0.7)',
-        'line-width': 2
-      }
-    };
-    if (this.mapComponent.map.getZoom()) {
-      if (this.mapComponent.map.getZoom() > 11) {
-        this.mapComponent.addLayer(roadLayer, roadSource, roadsSourceId);
-      }
-    }
+            // Add source and layers with modified data
+            const roadSource: maplibregl.SourceSpecification = {
+                type: 'geojson',
+                data: data
+            };
 
-    this.mapComponent.map.on('zoomend', () => {
-      // Add road layer to the map
-      const zoomLevel = this.mapComponent.map.getZoom();
-      if (zoomLevel > 11) {
-        // console.log(zoomLevel);
-        this.mapComponent.addLayer(roadLayer, roadSource, roadsSourceId);
-      } else {
-        this.mapComponent.removeLayer(roadLayerId, roadsSourceId);
-      }
-    })
-  }
-  //#endregion
+            const roadLayer: maplibregl.LayerSpecification = {
+                id: roadLayerId,
+                type: 'line',
+                source: roadsSourceId,
+                paint: {
+                    'line-color': 'rgba(255, 255, 255, 0.7)',
+                    'line-width': 2,
+                }
+            };
+
+            const roadLabelLayer: maplibregl.LayerSpecification = {
+                id: roadLabelLayerId,
+                type: 'symbol',
+                source: roadsSourceId,
+                layout: {
+                    'text-field': ['get', 'name'],
+                    'text-font': ['Open Sans Regular', 'Arial Unicode MS Regular'],
+                    'text-size': 10,
+                    'symbol-placement': 'line'
+                },
+                paint: {
+                    'text-color': 'rgba(255, 255, 255, 0.9)',
+                    'text-halo-color': 'rgba(0, 0, 0, 0.7)',
+                    'text-halo-width': 1
+                }
+            };
+
+            if (this.mapComponent.map.getZoom()) {
+                if (this.mapComponent.map.getZoom() > 11) {
+                    this.mapComponent.addLayer(roadLayer, roadSource, roadsSourceId);
+                    this.mapComponent.addLayer(roadLabelLayer, roadSource, roadsSourceId);
+                }
+            }
+
+            this.mapComponent.map.on('zoomend', () => {
+                const zoomLevel = this.mapComponent.map.getZoom();
+                if (zoomLevel > 11) {
+                    this.mapComponent.addLayer(roadLayer, roadSource, roadsSourceId);
+                    this.mapComponent.addLayer(roadLabelLayer, roadSource, roadsSourceId);
+                } else {
+                    this.mapComponent.removeLayer(roadLayerId, roadsSourceId);
+                    this.mapComponent.removeLayer(roadLabelLayerId, roadsSourceId);
+                }
+            });
+        });
+}
+//#endregion
 }
